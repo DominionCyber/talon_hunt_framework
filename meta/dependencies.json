@@ -1,0 +1,626 @@
+{
+  "talon_win_format_callstackmodules_child_process": {
+    "path": "transforms/formatters/windows/talon_win_format_callstackmodules_child_process.yaml",
+    "category": "transforms/formatters/windows",
+    "dependencies": [],
+    "description": "Formats CallStackModuleNames into readable semicolon-delimited list for analysis."
+  },
+  "talon_win_format_command_history": {
+    "path": "transforms/formatters/windows/talon_win_format_command_history.yaml",
+    "category": "transforms/formatters/windows",
+    "dependencies": [],
+    "description": "Formats PowerShell CommandHistory into structured output with timestamps and commands."
+  },
+  "talon_win_format_callstackmodules": {
+    "path": "transforms/formatters/windows/talon_win_format_callstackmodules.yaml",
+    "category": "transforms/formatters/windows",
+    "dependencies": [],
+    "description": "Formats CallStackModuleNames into readable semicolon-delimited list for analysis."
+  },
+  "talon_win_format_scheduledtaskregistered": {
+    "path": "transforms/formatters/windows/talon_win_format_scheduledtaskregistered.yaml",
+    "category": "transforms/formatters/windows",
+    "dependencies": [],
+    "description": "Formats ScheduledTaskRegistered XML data into human-readable task details."
+  },
+  "talon_win_normalize_newscriptwritten": {
+    "path": "transforms/normalizers/windows/talon_win_normalize_newscriptwritten.yaml",
+    "category": "transforms/normalizers/windows",
+    "dependencies": [],
+    "description": "Normalizes event fields using conditional logic to standardize values across different event sources."
+  },
+  "talon_win_normalize_dnsrequest": {
+    "path": "transforms/normalizers/windows/talon_win_normalize_dnsrequest.yaml",
+    "category": "transforms/normalizers/windows",
+    "dependencies": [],
+    "description": "Normalizes event fields using conditional logic to standardize values across different event sources."
+  },
+  "talon_win_normalize_regsystemconfigvalueupdate": {
+    "path": "transforms/normalizers/windows/talon_win_normalize_regsystemconfigvalueupdate.yaml",
+    "category": "transforms/normalizers/windows",
+    "dependencies": [],
+    "description": "Normalizes event fields using conditional logic to standardize values across different event sources."
+  },
+  "talon_win_normalize_webscriptfilewritten": {
+    "path": "transforms/normalizers/windows/talon_win_normalize_webscriptfilewritten.yaml",
+    "category": "transforms/normalizers/windows",
+    "dependencies": [],
+    "description": "Normalizes event fields using conditional logic to standardize values across different event sources."
+  },
+  "talon_win_normalize_unsignedmoduleload": {
+    "path": "transforms/normalizers/windows/talon_win_normalize_unsignedmoduleload.yaml",
+    "category": "transforms/normalizers/windows",
+    "dependencies": [],
+    "description": "Normalizes event fields using conditional logic to standardize values across different event sources."
+  },
+  "talon_win_normalize_file_path": {
+    "path": "transforms/normalizers/windows/talon_win_normalize_file_path.yaml",
+    "category": "transforms/normalizers/windows",
+    "dependencies": [],
+    "description": "Normalizes and standardizes event fields for consistent downstream processing."
+  },
+  "talon_win_normalize_createservice": {
+    "path": "transforms/normalizers/windows/talon_win_normalize_createservice.yaml",
+    "category": "transforms/normalizers/windows",
+    "dependencies": [],
+    "description": "Normalizes event fields using conditional logic to standardize values across different event sources."
+  },
+  "talon_win_normalize_dllinjection": {
+    "path": "transforms/normalizers/windows/talon_win_normalize_dllinjection.yaml",
+    "category": "transforms/normalizers/windows",
+    "dependencies": [],
+    "description": "Normalizes and standardizes event fields for consistent downstream processing."
+  },
+  "talon_win_normalize_networkconnectip4": {
+    "path": "transforms/normalizers/windows/talon_win_normalize_networkconnectip4.yaml",
+    "category": "transforms/normalizers/windows",
+    "dependencies": [],
+    "description": "Normalizes event fields using conditional logic to standardize values across different event sources."
+  },
+  "talon_win_normalize_scriptfilewritteninfo": {
+    "path": "transforms/normalizers/windows/talon_win_normalize_scriptfilewritteninfo.yaml",
+    "category": "transforms/normalizers/windows",
+    "dependencies": [],
+    "description": "Normalizes event fields using conditional logic to standardize values across different event sources."
+  },
+  "talon_win_normalize_scheduledtaskregistered": {
+    "path": "transforms/normalizers/windows/talon_win_normalize_scheduledtaskregistered.yaml",
+    "category": "transforms/normalizers/windows",
+    "dependencies": [],
+    "description": "Normalizes event fields using conditional logic to standardize values across different event sources."
+  },
+  "talon_win_normalize_imagehash": {
+    "path": "transforms/normalizers/windows/talon_win_normalize_imagehash.yaml",
+    "category": "transforms/normalizers/windows",
+    "dependencies": [],
+    "description": "Normalizes event fields using conditional logic to standardize values across different event sources."
+  },
+  "talon_win_normalize_lnkfilewritten": {
+    "path": "transforms/normalizers/windows/talon_win_normalize_lnkfilewritten.yaml",
+    "category": "transforms/normalizers/windows",
+    "dependencies": [],
+    "description": "Normalizes event fields using conditional logic to standardize values across different event sources."
+  },
+  "talon_win_normalize_scriptcontrolscantelemetry": {
+    "path": "transforms/normalizers/windows/talon_win_normalize_scriptcontrolscantelemetry.yaml",
+    "category": "transforms/normalizers/windows",
+    "dependencies": [],
+    "description": "Normalizes event fields using conditional logic to standardize values across different event sources."
+  },
+  "talon_win_normalize_packedexecutablewritten": {
+    "path": "transforms/normalizers/windows/talon_win_normalize_packedexecutablewritten.yaml",
+    "category": "transforms/normalizers/windows",
+    "dependencies": [],
+    "description": "Normalizes event fields using conditional logic to standardize values across different event sources."
+  },
+  "talon_win_normalize_newexecutablewritten": {
+    "path": "transforms/normalizers/windows/talon_win_normalize_newexecutablewritten.yaml",
+    "category": "transforms/normalizers/windows",
+    "dependencies": [],
+    "description": "Normalizes event fields using conditional logic to standardize values across different event sources."
+  },
+  "talon_win_normalize_reflectivedotnetmoduleload": {
+    "path": "transforms/normalizers/windows/talon_win_normalize_reflectivedotnetmoduleload.yaml",
+    "category": "transforms/normalizers/windows",
+    "dependencies": [],
+    "description": "Normalizes event fields using conditional logic to standardize values across different event sources."
+  },
+  "talon_win_normalize_motwfilewritten": {
+    "path": "transforms/normalizers/windows/talon_win_normalize_motwfilewritten.yaml",
+    "category": "transforms/normalizers/windows",
+    "dependencies": [],
+    "description": "Normalizes event fields using conditional logic to standardize values across different event sources."
+  },
+  "talon_win_normalize_asepvalueupdate": {
+    "path": "transforms/normalizers/windows/talon_win_normalize_asepvalueupdate.yaml",
+    "category": "transforms/normalizers/windows",
+    "dependencies": [],
+    "description": "Normalizes event fields using conditional logic to standardize values across different event sources."
+  },
+  "talon_win_normalize_pefilewritten": {
+    "path": "transforms/normalizers/windows/talon_win_normalize_pefilewritten.yaml",
+    "category": "transforms/normalizers/windows",
+    "dependencies": [],
+    "description": "Normalizes event fields using conditional logic to standardize values across different event sources."
+  },
+  "talon_win_normalize_directorycreate": {
+    "path": "transforms/normalizers/windows/talon_win_normalize_directorycreate.yaml",
+    "category": "transforms/normalizers/windows",
+    "dependencies": [],
+    "description": "Normalizes event fields using conditional logic to standardize values across different event sources."
+  },
+  "talon_win_normalize_browserextensioninstalled": {
+    "path": "transforms/normalizers/windows/talon_win_normalize_browserextensioninstalled.yaml",
+    "category": "transforms/normalizers/windows",
+    "dependencies": [],
+    "description": "Normalizes event fields using conditional logic to standardize values across different event sources."
+  },
+  "talon_win_normalize_processrollup2": {
+    "path": "transforms/normalizers/windows/talon_win_normalize_processrollup2.yaml",
+    "category": "transforms/normalizers/windows",
+    "dependencies": [],
+    "description": "Normalizes event fields using conditional logic to standardize values across different event sources."
+  },
+  "talon_win_normalize_nt_authority_system_user": {
+    "path": "transforms/normalizers/windows/talon_win_normalize_nt_authority_system_user.yaml",
+    "category": "transforms/normalizers/windows",
+    "dependencies": [],
+    "description": "Normalizes event fields using conditional logic to standardize values across different event sources."
+  },
+  "talon_win_normalize_classifiedmoduleload": {
+    "path": "transforms/normalizers/windows/talon_win_normalize_classifiedmoduleload.yaml",
+    "category": "transforms/normalizers/windows",
+    "dependencies": [],
+    "description": "Normalizes event fields using conditional logic to standardize values across different event sources."
+  },
+  "talon_lin_normalize_processrollup2": {
+    "path": "transforms/normalizers/linux/talon_lin_normalize_processrollup2.yaml",
+    "category": "transforms/normalizers/linux",
+    "dependencies": [],
+    "description": "Normalizes and standardizes event fields for consistent downstream processing."
+  },
+  "talon_lin_normalize_dnsrequest": {
+    "path": "transforms/normalizers/linux/talon_lin_normalize_dnsrequest.yaml",
+    "category": "transforms/normalizers/linux",
+    "dependencies": [],
+    "description": "Normalizes event fields using conditional logic to standardize values across different event sources."
+  },
+  "talon_lin_normalize_networkconnectip4": {
+    "path": "transforms/normalizers/linux/talon_lin_normalize_networkconnectip4.yaml",
+    "category": "transforms/normalizers/linux",
+    "dependencies": [],
+    "description": "Normalizes event fields using conditional logic to standardize values across different event sources."
+  },
+  "talon_win_deconflict_scheduledtaskregistered": {
+    "path": "transforms/deconflict/windows/talon_win_deconflict_scheduledtaskregistered.yaml",
+    "category": "transforms/deconflict/windows",
+    "dependencies": [],
+    "description": "Aliases fields to Task-prefixed names for safe joins. Maps UserName, ComputerName, and related attributes."
+  },
+  "talon_win_deconflict_reflectivedotnetmoduleload": {
+    "path": "transforms/deconflict/windows/talon_win_deconflict_reflectivedotnetmoduleload.yaml",
+    "category": "transforms/deconflict/windows",
+    "dependencies": [],
+    "description": "Aliases fields to ReflectiveDotNETModule-prefixed names for safe joins. Maps FileName, FilePath, SHA256HashData, and related attributes."
+  },
+  "talon_win_deconflict_classifiedmoduleload": {
+    "path": "transforms/deconflict/windows/talon_win_deconflict_classifiedmoduleload.yaml",
+    "category": "transforms/deconflict/windows",
+    "dependencies": [],
+    "description": "Aliases fields to ClassifiedModule-prefixed names for safe joins. Maps FileName, FilePath, SHA256HashData, and related attributes."
+  },
+  "talon_win_deconflict_unsignedmoduleload": {
+    "path": "transforms/deconflict/windows/talon_win_deconflict_unsignedmoduleload.yaml",
+    "category": "transforms/deconflict/windows",
+    "dependencies": [],
+    "description": "Aliases fields to UnsignedModule-prefixed names for safe joins. Maps FileName, FilePath, SHA256HashData, and related attributes."
+  },
+  "talon_win_deconflict_directorycreate": {
+    "path": "transforms/deconflict/windows/talon_win_deconflict_directorycreate.yaml",
+    "category": "transforms/deconflict/windows",
+    "dependencies": [],
+    "description": "Aliases fields to Directory-prefixed names for safe joins. Maps FileName, FilePath, FileIdentifier, and related attributes."
+  },
+  "talon_win_deconflict_imagehash": {
+    "path": "transforms/deconflict/windows/talon_win_deconflict_imagehash.yaml",
+    "category": "transforms/deconflict/windows",
+    "dependencies": [],
+    "description": "Aliases fields to ImageHash-prefixed names for safe joins. Maps FileName, FilePath, SHA256HashData, and related attributes."
+  },
+  "talon_win_deconflict_processrollup2": {
+    "path": "transforms/deconflict/windows/talon_win_deconflict_processrollup2.yaml",
+    "category": "transforms/deconflict/windows",
+    "dependencies": [],
+    "description": "Aliases fields to Child-prefixed names for safe joins. Maps FileName, FilePath, CommandLine, and related attributes."
+  },
+  "talon_lin_deconflict_processrollup2": {
+    "path": "transforms/deconflict/linux/talon_lin_deconflict_processrollup2.yaml",
+    "category": "transforms/deconflict/linux",
+    "dependencies": [],
+    "description": "Aliases fields to Child-prefixed names for safe joins. Maps ImageFileName, CommandLine, SHA256HashData, and related attributes."
+  },
+  "talon_win_query_dnsrequest": {
+    "path": "cradles/query/windows/dns/talon_win_query_dnsrequest.yaml",
+    "category": "cradles/query/windows",
+    "dependencies": [
+      "talon_win_normalize_dnsrequest",
+      "talon_utility_falcon_helper",
+      "talon_convert_time_utc"
+    ],
+    "description": "Base query for DNS request events. Normalizes and enriches DNS resolution data."
+  },
+  "talon_win_query_processrollup2": {
+    "path": "cradles/query/windows/process/talon_win_query_processrollup2.yaml",
+    "category": "cradles/query/windows",
+    "dependencies": [
+      "talon_win_normalize_file_path",
+      "talon_win_format_callstackmodules",
+      "talon_utility_falcon_helper",
+      "talon_convert_time_utc",
+      "talon_win_normalize_processrollup2",
+      "talon_win_normalize_nt_authority_system_user"
+    ],
+    "description": "Base query for ProcessRollup2 events. Applies normalization and field standardization for process execution data."
+  },
+  "talon_win_query_imagehash": {
+    "path": "cradles/query/windows/process/talon_win_query_imagehash.yaml",
+    "category": "cradles/query/windows",
+    "dependencies": [
+      "talon_win_normalize_imagehash",
+      "talon_win_normalize_file_path",
+      "talon_utility_falcon_helper",
+      "talon_win_deconflict_imagehash",
+      "talon_convert_time_utc",
+      "talon_convert_file_size"
+    ],
+    "description": "Base query for ImageHash events. Normalizes file hash and path information."
+  },
+  "talon_win_query_commandhistory": {
+    "path": "cradles/query/windows/process/talon_win_query_commandhistory.yaml",
+    "category": "cradles/query/windows",
+    "dependencies": [
+      "talon_win_format_command_history",
+      "talon_utility_falcon_helper",
+      "talon_convert_time_utc"
+    ],
+    "description": "Base query for command history events. Normalizes PowerShell command execution data."
+  },
+  "talon_win_query_reflectivedotnetmoduleload": {
+    "path": "cradles/query/windows/module/talon_win_query_reflectivedotnetmoduleload.yaml",
+    "category": "cradles/query/windows",
+    "dependencies": [
+      "talon_win_normalize_reflectivedotnetmoduleload",
+      "talon_win_normalize_file_path",
+      "talon_utility_falcon_helper",
+      "talon_convert_time_utc",
+      "talon_win_deconflict_reflectivedotnetmoduleload"
+    ],
+    "description": "Base query for module load events. Normalizes file paths, hashes, and module metadata."
+  },
+  "talon_win_query_unsignedmoduleload": {
+    "path": "cradles/query/windows/module/talon_win_query_unsignedmoduleload.yaml",
+    "category": "cradles/query/windows",
+    "dependencies": [
+      "talon_win_deconflict_unsignedmoduleload",
+      "talon_win_normalize_unsignedmoduleload",
+      "talon_win_normalize_file_path",
+      "talon_utility_falcon_helper",
+      "talon_convert_time_utc"
+    ],
+    "description": "Base query for module load events. Normalizes file paths, hashes, and module metadata."
+  },
+  "talon_win_query_classifiedmoduleload": {
+    "path": "cradles/query/windows/module/talon_win_query_classifiedmoduleload.yaml",
+    "category": "cradles/query/windows",
+    "dependencies": [
+      "talon_win_normalize_classifiedmoduleload",
+      "talon_win_deconflict_classifiedmoduleload",
+      "talon_win_normalize_file_path",
+      "talon_utility_falcon_helper",
+      "talon_convert_time_utc",
+      "talon_convert_file_size"
+    ],
+    "description": "Base query for module load events. Normalizes file paths, hashes, and module metadata."
+  },
+  "talon_win_query_directorycreate": {
+    "path": "cradles/query/windows/file/talon_win_query_directorycreate.yaml",
+    "category": "cradles/query/windows",
+    "dependencies": [
+      "talon_win_deconflict_directorycreate",
+      "talon_win_normalize_file_path",
+      "talon_utility_falcon_helper",
+      "talon_convert_time_utc",
+      "talon_win_normalize_directorycreate"
+    ],
+    "description": "Base query for directory creation events. Normalizes path and file system metadata."
+  },
+  "talon_win_query_scriptcontrolscantelemetry": {
+    "path": "cradles/query/windows/file/talon_win_query_scriptcontrolscantelemetry.yaml",
+    "category": "cradles/query/windows",
+    "dependencies": [
+      "talon_win_normalize_file_path",
+      "talon_win_format_callstackmodules",
+      "talon_utility_falcon_helper",
+      "talon_convert_time_utc",
+      "talon_win_normalize_scriptcontrolscantelemetry",
+      "talon_convert_file_size"
+    ],
+    "description": "Base query for script execution telemetry. Normalizes script content and execution context."
+  },
+  "talon_win_query_networkconnectip4": {
+    "path": "cradles/query/windows/network/talon_win_query_networkconnectip4.yaml",
+    "category": "cradles/query/windows",
+    "dependencies": [
+      "talon_win_normalize_networkconnectip4",
+      "talon_utility_falcon_helper",
+      "talon_convert_time_utc"
+    ],
+    "description": "Base query for network connection events. Normalizes IP, port, and protocol fields."
+  },
+  "talon_win_query_scheduledtaskregistered": {
+    "path": "cradles/query/windows/persistence/talon_win_query_scheduledtaskregistered.yaml",
+    "category": "cradles/query/windows",
+    "dependencies": [
+      "talon_win_normalize_scheduledtaskregistered",
+      "talon_utility_falcon_helper",
+      "talon_win_format_scheduledtaskregistered",
+      "talon_convert_time_utc",
+      "talon_win_deconflict_scheduledtaskregistered"
+    ],
+    "description": "Base query for scheduled task events. Normalizes task registration details."
+  },
+  "talon_win_query_createservice": {
+    "path": "cradles/query/windows/persistence/talon_win_query_createservice.yaml",
+    "category": "cradles/query/windows",
+    "dependencies": [
+      "talon_win_normalize_createservice",
+      "talon_utility_falcon_helper",
+      "talon_convert_time_utc"
+    ],
+    "description": "Base query for service creation events. Normalizes service configuration and startup data."
+  },
+  "talon_win_query_asepvalueupdate": {
+    "path": "cradles/query/windows/registry/talon_win_query_asepvalueupdate.yaml",
+    "category": "cradles/query/windows",
+    "dependencies": [
+      "talon_win_normalize_asepvalueupdate",
+      "talon_utility_falcon_helper",
+      "talon_convert_time_utc"
+    ],
+    "description": "Base query for registry events. Normalizes and enriches Windows registry activity."
+  },
+  "talon_win_query_regsystemconfigvalueupdate": {
+    "path": "cradles/query/windows/registry/talon_win_query_regsystemconfigvalueupdate.yaml",
+    "category": "cradles/query/windows",
+    "dependencies": [
+      "talon_win_normalize_regsystemconfigvalueupdate",
+      "talon_utility_falcon_helper",
+      "talon_convert_time_utc"
+    ],
+    "description": "Base query for registry events related to system configuration or security."
+  },
+  "talon_lin_query_dnsrequest": {
+    "path": "cradles/query/linux/dns/talon_lin_query_dnsrequest.yaml",
+    "category": "cradles/query/linux",
+    "dependencies": [
+      "talon_lin_normalize_dnsrequest",
+      "talon_utility_falcon_helper",
+      "talon_convert_time_utc"
+    ],
+    "description": "Base query for DNS request events. Normalizes and enriches DNS resolution data."
+  },
+  "talon_lin_query_processrollup2": {
+    "path": "cradles/query/linux/process/talon_lin_query_processrollup2.yaml",
+    "category": "cradles/query/linux",
+    "dependencies": [
+      "talon_lin_normalize_processrollup2",
+      "talon_utility_falcon_helper",
+      "talon_convert_time_utc"
+    ],
+    "description": "Base query for ProcessRollup2 events. Applies normalization and field standardization for process execution data."
+  },
+  "talon_lin_query_networkconnectip4": {
+    "path": "cradles/query/linux/network/talon_lin_query_networkconnectip4.yaml",
+    "category": "cradles/query/linux",
+    "dependencies": [
+      "talon_lin_normalize_networkconnectip4",
+      "talon_utility_falcon_helper",
+      "talon_convert_time_utc"
+    ],
+    "description": "Base query for network connection events. Normalizes IP, port, and protocol fields."
+  },
+  "talon_win_match_dnsrequest_processrollup2": {
+    "path": "cradles/match/windows/dns/talon_win_match_dnsrequest_processrollup2.yaml",
+    "category": "cradles/match/windows",
+    "dependencies": [
+      "talon_win_normalize_file_path",
+      "talon_win_format_callstackmodules",
+      "talon_utility_falcon_helper",
+      "talon_convert_time_utc",
+      "talon_win_normalize_processrollup2",
+      "talon_utility_falcon_pid",
+      "talon_win_normalize_nt_authority_system_user"
+    ],
+    "description": "Joins dnsrequest events with ProcessRollup2 to enrich with parent process context."
+  },
+  "talon_win_match_scheduledtaskregistered_processrollup2": {
+    "path": "cradles/match/windows/process/talon_win_match_scheduledtaskregistered_processrollup2.yaml",
+    "category": "cradles/match/windows",
+    "dependencies": [
+      "talon_win_normalize_scheduledtaskregistered",
+      "talon_win_normalize_file_path",
+      "talon_win_format_callstackmodules",
+      "talon_utility_falcon_helper",
+      "talon_win_format_scheduledtaskregistered",
+      "talon_convert_time_utc",
+      "talon_win_normalize_processrollup2",
+      "talon_utility_falcon_pid",
+      "talon_win_normalize_nt_authority_system_user",
+      "talon_win_deconflict_scheduledtaskregistered"
+    ],
+    "description": "Joins scheduledtaskregistered events with ProcessRollup2 to enrich with parent process context."
+  },
+  "talon_win_match_reflectivedotnetmoduleload_processrollup2": {
+    "path": "cradles/match/windows/process/talon_win_match_reflectivedotnetmoduleload_processrollup2.yaml",
+    "category": "cradles/match/windows",
+    "dependencies": [
+      "talon_win_normalize_reflectivedotnetmoduleload",
+      "talon_win_normalize_file_path",
+      "talon_win_format_callstackmodules",
+      "talon_utility_falcon_helper",
+      "talon_convert_time_utc",
+      "talon_win_deconflict_reflectivedotnetmoduleload",
+      "talon_utility_falcon_pid",
+      "talon_win_normalize_nt_authority_system_user",
+      "talon_win_normalize_processrollup2"
+    ],
+    "description": "Joins reflectivedotnetmoduleload events with ProcessRollup2 to enrich with parent process context."
+  },
+  "talon_win_match_processrollup2_enhanced": {
+    "path": "cradles/match/windows/process/talon_win_match_processrollup2_enhanced.yaml",
+    "category": "cradles/match/windows",
+    "dependencies": [
+      "talon_win_deconflict_processrollup2",
+      "talon_win_format_callstackmodules_child_process",
+      "talon_win_normalize_file_path",
+      "talon_win_format_callstackmodules",
+      "talon_utility_falcon_helper",
+      "talon_convert_time_utc",
+      "talon_win_normalize_processrollup2",
+      "talon_win_normalize_nt_authority_system_user"
+    ],
+    "description": "Joins _enhanced events with ProcessRollup2 to enrich with parent process context."
+  },
+  "talon_win_match_classifiedmoduleload_processrollup2": {
+    "path": "cradles/match/windows/process/talon_win_match_classifiedmoduleload_processrollup2.yaml",
+    "category": "cradles/match/windows",
+    "dependencies": [
+      "talon_win_normalize_classifiedmoduleload",
+      "talon_win_deconflict_classifiedmoduleload",
+      "talon_win_normalize_file_path",
+      "talon_win_format_callstackmodules",
+      "talon_utility_falcon_helper",
+      "talon_convert_time_utc",
+      "talon_win_normalize_processrollup2",
+      "talon_convert_file_size",
+      "talon_utility_falcon_pid",
+      "talon_win_normalize_nt_authority_system_user"
+    ],
+    "description": "Joins classifiedmoduleload events with ProcessRollup2 to enrich with parent process context."
+  },
+  "talon_win_match_createservice_processrollup2": {
+    "path": "cradles/match/windows/process/talon_win_match_createservice_processrollup2.yaml",
+    "category": "cradles/match/windows",
+    "dependencies": [
+      "talon_win_normalize_file_path",
+      "talon_win_format_callstackmodules",
+      "talon_win_normalize_createservice",
+      "talon_utility_falcon_helper",
+      "talon_convert_time_utc",
+      "talon_win_normalize_processrollup2",
+      "talon_utility_falcon_pid",
+      "talon_win_normalize_nt_authority_system_user"
+    ],
+    "description": "Joins createservice events with ProcessRollup2 to enrich with parent process context."
+  },
+  "talon_win_match_unsignedmoduleload_processrollup2": {
+    "path": "cradles/match/windows/process/talon_win_match_unsignedmoduleload_processrollup2.yaml",
+    "category": "cradles/match/windows",
+    "dependencies": [
+      "talon_win_deconflict_unsignedmoduleload",
+      "talon_win_normalize_file_path",
+      "talon_win_format_callstackmodules",
+      "talon_utility_falcon_helper",
+      "talon_convert_time_utc",
+      "talon_win_normalize_processrollup2",
+      "talon_utility_falcon_pid",
+      "talon_win_normalize_nt_authority_system_user"
+    ],
+    "description": "Joins unsignedmoduleload events with ProcessRollup2 to enrich with parent process context."
+  },
+  "talon_win_match_imagehash_processrollup2": {
+    "path": "cradles/match/windows/process/talon_win_match_imagehash_processrollup2.yaml",
+    "category": "cradles/match/windows",
+    "dependencies": [
+      "talon_win_normalize_imagehash",
+      "talon_win_normalize_file_path",
+      "talon_win_format_callstackmodules",
+      "talon_utility_falcon_helper",
+      "talon_win_deconflict_imagehash",
+      "talon_convert_time_utc",
+      "talon_win_normalize_processrollup2",
+      "talon_convert_file_size",
+      "talon_utility_falcon_pid",
+      "talon_win_normalize_nt_authority_system_user"
+    ],
+    "description": "Joins imagehash events with ProcessRollup2 to enrich with parent process context."
+  },
+  "talon_win_match_networkconnectip4_processrollup2": {
+    "path": "cradles/match/windows/network/talon_win_match_networkconnectip4_processrollup2.yaml",
+    "category": "cradles/match/windows",
+    "dependencies": [
+      "talon_win_normalize_networkconnectip4",
+      "talon_win_format_callstackmodules",
+      "talon_win_normalize_file_path",
+      "talon_utility_falcon_helper",
+      "lookup:rfc_exclusions",
+      "talon_convert_time_utc",
+      "talon_win_normalize_processrollup2",
+      "talon_utility_falcon_pid",
+      "talon_win_normalize_nt_authority_system_user"
+    ],
+    "description": "Joins networkconnectip4 events with ProcessRollup2 to enrich with parent process context."
+  },
+  "talon_win_match_processrollup2_networkconnectip4": {
+    "path": "cradles/match/windows/network/talon_win_match_processrollup2_networkconnectip4.yaml",
+    "category": "cradles/match/windows",
+    "dependencies": [
+      "talon_win_normalize_file_path",
+      "talon_win_format_callstackmodules",
+      "talon_win_normalize_networkconnectip4",
+      "talon_utility_falcon_helper",
+      "lookup:rfc_exclusions",
+      "talon_convert_time_utc",
+      "talon_win_normalize_processrollup2",
+      "talon_utility_falcon_pid",
+      "talon_win_normalize_nt_authority_system_user"
+    ],
+    "description": "Joins ProcessRollup2 events with NetworkConnectIP4 to enrich with parent process context."
+  },
+  "talon_lin_match_networkconnectip4_processrollup2": {
+    "path": "cradles/match/linux/network/talon_lin_match_networkconnectip4_processrollup2.yaml",
+    "category": "cradles/match/linux",
+    "dependencies": [
+      "talon_lin_normalize_processrollup2",
+      "talon_lin_normalize_networkconnectip4",
+      "talon_utility_falcon_helper",
+      "talon_convert_time_utc",
+      "talon_utility_falcon_pid"
+    ],
+    "description": "Joins networkconnectip4 events with ProcessRollup2 to enrich with parent process context."
+  },
+  "talon_convert_file_size": {
+    "path": "core/converters/talon_convert_file_size.yaml",
+    "category": "core/converters",
+    "dependencies": [],
+    "description": "Converts byte values to human-readable format (TB/GB/MB/KB/Bytes) using cascading thresholds."
+  },
+  "talon_convert_time_utc": {
+    "path": "core/converters/talon_convert_time_utc.yaml",
+    "category": "core/converters",
+    "dependencies": [],
+    "description": "Converts timestamp to standardized UTC format for consistent display and cross-event correlation."
+  },
+  "talon_utility_falcon_pid": {
+    "path": "core/utilities/talon_utility_falcon_pid.yaml",
+    "category": "core/utilities",
+    "dependencies": [],
+    "description": "Utility for constructing Falcon process ID links from aid and TargetProcessId."
+  },
+  "talon_utility_falcon_helper": {
+    "path": "core/utilities/talon_utility_falcon_helper.yaml",
+    "category": "core/utilities",
+    "dependencies": [],
+    "description": "Utility macro providing Falcon console deep-link generation for hosts and processes."
+  }
+}
