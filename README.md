@@ -48,7 +48,7 @@ The Community Edition of Talon Hunt Framework includes conversions from popular 
 > Dominion Cyber offers the **Talon Hunt Framework** for organizations looking for a **maintained instance of Talon**, along with associated **threat intelligence, detection and hunt feeds**.
 >
 > **Interested in enterprise support?**  
-> Reach out via the [Contact page](https://www.dominioncyber.net/) to get started.=
+> Reach out via the [Contact page](https://www.dominioncyber.net/) to get started.
 
 ## Useful Links
 
