@@ -1,0 +1,45 @@
+name: talon_win_normalize_packedexecutablewritten
+description: Normalizes event fields using conditional logic to standardize values across different event sources.
+visualization:
+  options:
+    columns:
+    - fieldName: '@timestamp'
+      format: datetime
+      type: field
+      width: 200
+    - groupByPrefix: false
+      header: Field List
+      type: fieldList
+    newestAtBottom: true
+    showOnlyFirstLine: false
+  type: list-view
+labels:
+- talon_hunt_framework
+- asset
+- normalize
+- packedexecutablewritten
+- windows
+$schema: https://schemas.humio.com/query/v0.6.0
+timeInterval:
+  isLive: false
+  start: 15m
+queryString: |-
+  // =====================================================
+  // NORMALIZATION
+  // =====================================================
+  | case {
+      FileSubType = "0"  | FileSubType := "NONE";
+      FileSubType = "1"  | FileSubType := "PE_PACKER_ASPACK";
+      FileSubType = "2"  | FileSubType := "PE_PACKER_MPRESS";
+      FileSubType = "3"  | FileSubType := "PE_PACKER_THEMIDA";
+      FileSubType = "4"  | FileSubType := "PE_PACKER_UPX";
+      FileSubType = "5"  | FileSubType := "PE_PACKER_VMPROTECT";
+      FileSubType = "20" | FileSubType := "REG_HIVE_OTHER";
+      FileSubType = "21" | FileSubType := "REG_HIVE_SAM";
+      FileSubType = "22" | FileSubType := "REG_HIVE_SECURITY";
+      FileSubType = "23" | FileSubType := "REG_HIVE_SOFTWARE";
+      FileSubType = "24" | FileSubType := "REG_HIVE_DEFAULT";
+      FileSubType = "25" | FileSubType := "REG_HIVE_NTUSER";
+      FileSubType = "26" | FileSubType := "REG_HIVE_SYSTEM";
+      *
+    }

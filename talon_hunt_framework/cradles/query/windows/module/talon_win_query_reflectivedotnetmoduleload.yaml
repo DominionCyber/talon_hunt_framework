@@ -1,0 +1,55 @@
+name: talon_win_query_reflectivedotnetmoduleload
+description: Base query for module load events. Normalizes file paths, hashes, and module metadata.
+visualization:
+  options:
+    cell-overflow: wrap-text
+    column-overflow: truncate
+    configured-columns: {}
+    row-numbers-enabled: false
+  type: table-view
+labels:
+- talon_hunt_framework
+- query
+- reflectivedotnetmoduleload
+- windows
+$schema: https://schemas.humio.com/query/v0.6.0
+timeInterval:
+  isLive: false
+  start: 15m
+queryString: |-
+  // =====================================================
+  // SEARCH
+  // =====================================================
+  #event_simpleName=ReflectiveDotnetModuleLoad event_platform=Win
+
+  // =====================================================
+  // SEARCH ASSETS
+  // =====================================================
+  | $talon_convert_time_utc()
+  | $talon_utility_falcon_helper()
+  | $talon_win_normalize_file_path(TargetField=ReflectiveDotNETModuleFilePath)
+  | $talon_win_deconflict_reflectivedotnetmoduleload()
+  | $talon_win_normalize_reflectivedotnetmoduleload()
+
+  // =====================================================
+  // TABLE
+  // =====================================================
+  | table(
+      [
+          utc_time,
+          ComputerName,
+          AssemblyId,
+          AssemblyName,
+          AssemblyFlags,
+          ModuleCommandLine,
+          DotnetModuleFlags,
+          DotnetModuleId,
+          EtwProviderType,
+          ReflectiveDotNETModuleFileName,
+          ReflectiveDotNETModuleFilePath,
+          ReflectiveDotNETModuleSHA256HashData,
+          ManagedPdbBuildPath,
+          ModuleILPath
+      ],
+      limit=max
+  )

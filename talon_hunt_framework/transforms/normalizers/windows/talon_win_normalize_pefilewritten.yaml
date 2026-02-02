@@ -1,0 +1,177 @@
+name: talon_win_normalize_pefilewritten
+description: Normalizes event fields using conditional logic to standardize values across different event sources.
+visualization:
+  options:
+    columns:
+    - fieldName: '@timestamp'
+      format: datetime
+      type: field
+      width: 200
+    - groupByPrefix: false
+      header: Field List
+      type: fieldList
+    newestAtBottom: true
+    showOnlyFirstLine: false
+  type: list-view
+labels:
+- talon_hunt_framework
+- asset
+- normalize
+- pefilewritten
+- windows
+$schema: https://schemas.humio.com/query/v0.6.0
+timeInterval:
+  isLive: false
+  start: 15m
+queryString: |-
+  // =====================================================
+  // NORMALIZATION
+  // =====================================================
+  | case {
+      CallStackModuleNamesVersion = "0" | CallStackModuleNamesVersion := "INVALID_VERSION";
+      CallStackModuleNamesVersion = "5" | CallStackModuleNamesVersion := "CSMN_FORMAT_5";
+      CallStackModuleNamesVersion = "6" | CallStackModuleNamesVersion := "CSMN_FORMAT_6";
+      CallStackModuleNamesVersion = "7" | CallStackModuleNamesVersion := "CSMN_FORMAT_7";
+      CallStackModuleNamesVersion = "8" | CallStackModuleNamesVersion := "CSMN_FORMAT_CURRENT";
+      *
+    }
+
+  | case {
+      ImageSubsystem = "0"   | ImageSubsystem := "IMAGE_SUBSYSTEM_UNKNOWN";
+      ImageSubsystem = "1"   | ImageSubsystem := "IMAGE_SUBSYSTEM_NATIVE";
+      ImageSubsystem = "2"   | ImageSubsystem := "IMAGE_SUBSYSTEM_WINDOWS_GUI";
+      ImageSubsystem = "3"   | ImageSubsystem := "IMAGE_SUBSYSTEM_WINDOWS_CUI";
+      ImageSubsystem = "7"   | ImageSubsystem := "IMAGE_SUBSYSTEM_POSIX_CUI";
+      ImageSubsystem = "16"  | ImageSubsystem := "IMAGE_SUBSYSTEM_WINDOWS_BOOT_APPLICATION";
+      ImageSubsystem = "256" | ImageSubsystem := "IMAGE_SUBSYSTEM_WSL";
+      *
+    }
+
+  | case {
+      FileCategory = "0"  | FileCategory := "OTHER";
+      FileCategory = "1"  | FileCategory := "ARCHIVES";
+      FileCategory = "2"  | FileCategory := "OFFICE_DOCUMENTS";
+      FileCategory = "3"  | FileCategory := "MULTIMEDIA_FILES";
+      FileCategory = "4"  | FileCategory := "DESIGN_FILES";
+      FileCategory = "5"  | FileCategory := "SOURCE_CODE";
+      FileCategory = "6"  | FileCategory := "EXECUTABLE_FILES";
+      FileCategory = "7"  | FileCategory := "VIRTUAL_MACHINE_FILES";
+      FileCategory = "8"  | FileCategory := "EMAIL_FILES";
+      FileCategory = "9"  | FileCategory := "DATA_AND_LOGS";
+      FileCategory = "10" | FileCategory := "ENCRYPTED";
+      *
+    }
+
+  | bitfield:extractFlagsAsString(
+      field="FileEcpBitmask",
+      flagNames=[
+          [0, "ECP_SRV_OPEN"],
+          [1, "ECP_CS_SENSOR_OPEN"],
+          [2, "ECP_CS_SENSOR_FILE_CHARACTERISTICS"]
+      ],
+      as="FileEcpBitmask_mask",
+      separator=", "
+    )
+
+  | bitfield:extractFlagsAsString(
+      field="SuspectStackFlag",
+      flagNames=[
+          [0,  "THREAD_START_NOT_IN_MODULE"],
+          [1,  "THREAD_START_IN_NON_IMAGE_FILE"],
+          [2,  "INVALID_TEB_STACK_VALUES"],
+          [3,  "STACK_POINTER_NOT_IN_STACK"],
+          [4,  "BASE_POINTER_NOT_IN_STACK"],
+          [5,  "SYSCALL_RETURN_ADDRESS_NOT_IN_NTDLL"],
+          [6,  "SYSCALL_RETURN_ADDRESS_ON_STACK"],
+          [7,  "STACK_IS_EXECUTABLE"],
+          [8,  "RETURN_ADDRESS_NOT_IN_MODULE"],
+          [9,  "RETURN_ADDRESS_IN_NON_IMAGE_FILE"],
+          [10, "RETURN_ADDRESS_IS_WRITABLE"],
+          [11, "ADDRESS_IN_REFLECTIVELY_LOADED_DLL"],
+          [12, "ETW_PROVIDED_CALLSTACK"],
+          [13, "RETURN_ADDRESS_IN_PRIVATE_IMAGE_MEMORY"]
+      ],
+      as="SuspectStackFlag_mask",
+      separator=", "
+    )
+
+  | bitfield:extractFlagsAsString(
+      field="ModuleCharacteristics",
+      flagNames=[
+          [0,  "RELOCS_STRIPPED"],
+          [1,  "EXECUTABLE_IMAGE"],
+          [2,  "LINE_NUMS_STRIPPED"],
+          [3,  "LOCAL_SYMS_STRIPPED"],
+          [4,  "AGGRESSIVE_WS_TRIM"],
+          [5,  "LARGE_ADDRESS_AWARE"],
+          [7,  "BYTES_RESERVED_LO"],
+          [8,  "_32BIT_MACHINE"],
+          [9,  "DEBUG_STRIPPED"],
+          [10, "REMOVABLE_RUN_FROM_SWAP"],
+          [11, "NET_RUN_FROM_SWAP"],
+          [12, "FILE_SYSTEM"],
+          [13, "FILE_DLL"],
+          [14, "UP_SYSTEM_ONLY"],
+          [15, "BYTES_RESERVED_HI"]
+      ],
+      as="ModuleCharacteristics_mask",
+      separator=", "
+    )
+
+  | bitfield:extractFlagsAsString(
+      field="SignInfoFlags",
+      flagNames=[
+          [0,  "SIGNATURE_FLAG_SELF_SIGNED"],
+          [1,  "SIGNATURE_FLAG_MS_SIGNED"],
+          [2,  "SIGNATURE_FLAG_TEST_SIGNED"],
+          [3,  "SIGNATURE_FLAG_MS_CROSS_SIGNED"],
+          [4,  "SIGNATURE_FLAG_CAT_SIGNED"],
+          [5,  "SIGNATURE_FLAG_DRM_SIGNED"],
+          [6,  "SIGNATURE_FLAG_DRM_TEST_SIGNED"],
+          [7,  "SIGNATURE_FLAG_MS_CAT_SIGNED"],
+          [8,  "SIGNATURE_FLAG_CATALOGS_RELOADED"],
+          [9,  "SIGNATURE_FLAG_NO_SIGNATURE"],
+          [10, "SIGNATURE_FLAG_INVALID_SIGN_CHAIN"],
+          [11, "SIGNATURE_FLAG_SIGN_HASH_MISMATCH"],
+          [12, "SIGNATURE_FLAG_NO_CODE_KEY_USAGE"],
+          [13, "SIGNATURE_FLAG_NO_PAGE_HASHES"],
+          [14, "SIGNATURE_FLAG_FAILED_CERT_CHECK"],
+          [15, "SIGNATURE_FLAG_NO_EMBEDDED_CERT"],
+          [16, "SIGNATURE_FLAG_FAILED_COPY_KEYS"],
+          [17, "SIGNATURE_FLAG_UNKNOWN_ERROR"],
+          [18, "SIGNATURE_FLAG_HAS_VALID_SIGNATURE"],
+          [19, "SIGNATURE_FLAG_EMBEDDED_SIGNED"],
+          [20, "SIGNATURE_FLAG_3RD_PARTY_ROOT"],
+          [21, "SIGNATURE_FLAG_TRUSTED_BOOT_ROOT"],
+          [22, "SIGNATURE_FLAG_UEFI_ROOT"],
+          [23, "SIGNATURE_FLAG_PRS_WIN81_ROOT"],
+          [24, "SIGNATURE_FLAG_FLIGHT_ROOT"],
+          [25, "SIGNATURE_FLAG_APPLE_SIGNED"],
+          [26, "SIGNATURE_FLAG_ESBCACHE"],
+          [27, "SIGNATURE_FLAG_NO_CACHED_DATA"],
+          [28, "SIGNATURE_FLAG_CERT_EXPIRED"],
+          [29, "SIGNATURE_FLAG_CERT_REVOKED"],
+          [30, "SIGNATURE_FLAG_MS_ISSUED_3RD_PARTY"]
+      ],
+      as="SignInfoFlags_mask",
+      separator=", "
+    )
+
+  | bitfield:extractFlagsAsString(
+      field="DllCharacteristics",
+      flagNames=[
+          [5,  "HIGH_ENTROPY_VA"],
+          [6,  "DYNAMIC_BASE"],
+          [7,  "FORCE_INTEGRITY"],
+          [8,  "NX_COMPAT"],
+          [9,  "NO_ISOLATION"],
+          [10, "NO_SEH"],
+          [11, "NO_BIND"],
+          [12, "APPCONTAINER"],
+          [13, "WDM_DRIVER"],
+          [14, "GUARD_CF"],
+          [15, "TERMINAL_SERVER_AWARE"]
+      ],
+      as="DllCharacteristics_mask",
+      separator=", "
+    )

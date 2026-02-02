@@ -1,0 +1,45 @@
+name: talon_win_normalize_scheduledtaskregistered
+description: Normalizes event fields using conditional logic to standardize values across different event sources.
+visualization:
+  options:
+    columns:
+    - fieldName: '@timestamp'
+      format: datetime
+      type: field
+      width: 200
+    - groupByPrefix: false
+      header: Field List
+      type: fieldList
+    newestAtBottom: true
+    showOnlyFirstLine: false
+  type: list-view
+labels:
+- talon_hunt_framework
+- asset
+- normalize
+- scheduledtaskregistered
+- windows
+$schema: https://schemas.humio.com/query/v0.6.0
+timeInterval:
+  isLive: false
+  start: 15m
+queryString: |-
+  // =====================================================
+  // NORMALIZATION
+  // =====================================================
+  | lower(field="InterfaceGuid", as="InterfaceGuid_norm")
+  | case {
+      InterfaceGuid_norm = "12345778-1234-abcd-ef00-0123456789ac" | InterfaceGuidSource := "SAMR";
+      InterfaceGuid_norm = "367abb81-9844-35f1-ad32-98f038001003" | InterfaceGuidSource := "SVCCTL";
+      InterfaceGuid_norm = "86d35949-83c9-4044-b424-db363231fd0c" | InterfaceGuidSource := "ITASKSCHEDULERSERVICE";
+      InterfaceGuid_norm = "338cd001-2244-31f1-aaaa-900038001003" | InterfaceGuidSource := "WINREG";
+      InterfaceGuid_norm = "9556dc99-828c-11cf-a37e-00aa003240c7" | InterfaceGuidSource := "IWBEMSERVICES";
+      InterfaceGuid_norm = "326731e3-c1c0-4a69-ae20-7d9044a4ea5c" | InterfaceGuidSource := "IUSERPROFILE";
+      InterfaceGuid_norm = "4f32adc8-6052-4a04-8701-293ccf2096f0" | InterfaceGuidSource := "SSPIRPRC";
+      InterfaceGuid_norm = "37668d37-507e-4160-9316-26306d150b12" | InterfaceGuidSource := "BITSJOB";
+      InterfaceGuid_norm = "f6beaff7-1e19-4fbb-9f8f-b89e2018337c" | InterfaceGuidSource := "EVENTSVC";
+      InterfaceGuid_norm = "82273fdc-e32a-18c3-3f78-827929dc23ea" | InterfaceGuidSource := "EVENTSVCLEGACY";
+      InterfaceGuid_norm = "5f894e5b-1e39-4778-8e23-9abad9f0e08c" | InterfaceGuidSource := "VSSPROVCREATESNAPSHOTSET";
+      InterfaceGuid_norm = "609e123e-2c5a-44d3-8f01-0b1d9a47d1ff" | InterfaceGuidSource := "VSSSOFTWARESNAPSHOTPROVIDER";
+      * | InterfaceGuidSource := "UNKNOWN_INTERFACE";
+  }

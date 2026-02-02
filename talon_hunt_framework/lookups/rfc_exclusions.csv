@@ -1,0 +1,36 @@
+cidr_exclusion,name,category,rfc,description,notes
+0.0.0.0/8,This Network,RFC Special Purpose,RFC 791 Section 3.2,Current/local/this network - used for source only,Addresses refer to source hosts on this network
+0.0.0.0/32,This Host on This Network,RFC Special Purpose,RFC 1122 Section 3.2.1.3,May be used as source address for host on this network,Single host identifier for unspecified source
+10.0.0.0/8,Private-Use Class A,RFC 1918 Private,RFC 1918,Private network space - Class A equivalent,Largest private address block - 16.7M addresses
+100.64.0.0/10,Shared Address Space / CGNAT,RFC Special Purpose,RFC 6598,Carrier-Grade NAT shared address space,ISP-to-subscriber communications behind CGNAT
+127.0.0.0/8,Loopback,RFC Special Purpose,RFC 1122 Section 3.2.1.3,IPv4 loopback addresses,All addresses in block reserved for loopback
+127.0.0.1/32,Localhost,RFC Special Purpose,RFC 1122,Standard localhost address,Most common loopback address used
+169.254.0.0/16,Link-Local / APIPA,RFC Special Purpose,RFC 3927,IPv4 link-local addresses (APIPA),Auto-assigned when DHCP unavailable
+169.254.169.254/32,Cloud Metadata Service,Cloud Infrastructure,N/A - Cloud Provider Standard,AWS/Azure/GCP instance metadata endpoint,CRITICAL: Often MONITORED not excluded - IMDS abuse detection
+172.16.0.0/12,Private-Use Class B,RFC 1918 Private,RFC 1918,Private network space - Class B equivalent,1M addresses - 172.16.0.0 to 172.31.255.255
+192.0.0.0/24,IETF Protocol Assignments,RFC Special Purpose,RFC 6890 Section 2.1,IANA protocol assignments pool,Reserved for IETF protocol use
+192.0.0.0/29,IPv4 Service Continuity Prefix,RFC Special Purpose,RFC 7335,DS-Lite and 464XLAT transition technology,Non-routed IPv4 for IPv6 transition solutions
+192.0.0.8/32,IPv4 Dummy Address,RFC Special Purpose,RFC 7600,IPv4 dummy address for IPv6 transition,Stateless IPv4/IPv6 transition
+192.0.0.9/32,Port Control Protocol Anycast,RFC Special Purpose,RFC 7723,PCP anycast address,NAT/firewall middlebox signaling
+192.0.0.10/32,Traversal Using Relays around NAT,RFC Special Purpose,RFC 8155,NAT traversal relay anycast,TURN server anycast address
+192.0.0.170/32,NAT64/DNS64 Discovery,RFC Special Purpose,RFC 8880 / RFC 7050,NAT64/DNS64 discovery address,IPv6-only network discovery mechanism
+192.0.0.171/32,NAT64/DNS64 Discovery,RFC Special Purpose,RFC 8880 / RFC 7050,NAT64/DNS64 discovery address,Second discovery address
+192.0.2.0/24,TEST-NET-1,RFC Documentation,RFC 5737,Documentation and examples only,Never route on public Internet
+192.31.196.0/24,AS112-v4,RFC Special Purpose,RFC 7535,AS112 service IPv4 prefix,Reverse DNS for private addresses
+192.52.193.0/24,AMT,RFC Special Purpose,RFC 7450,Automatic Multicast Tunneling,Multicast tunneling relay
+192.88.99.0/24,6to4 Relay Anycast (Deprecated),RFC Special Purpose,RFC 7526,Formerly 6to4 relay - now deprecated,DEPRECATED - was IPv6 to IPv4 relay
+192.168.0.0/16,Private-Use Class C,RFC 1918 Private,RFC 1918,Private network space - Class C equivalent,65K addresses - most common home network range
+192.175.48.0/24,Direct Delegation AS112 Service,RFC Special Purpose,RFC 7534,AS112 direct delegation,DNS anycast for private reverse zones
+198.18.0.0/15,Benchmarking,RFC Special Purpose,RFC 2544,Network device benchmark testing,Inter-network benchmark testing - 131K addresses
+198.51.100.0/24,TEST-NET-2,RFC Documentation,RFC 5737,Documentation and examples only,Never route on public Internet
+203.0.113.0/24,TEST-NET-3,RFC Documentation,RFC 5737,Documentation and examples only,Never route on public Internet
+224.0.0.0/4,Multicast,RFC Special Purpose,RFC 5771,IPv4 multicast address space,268M addresses - 224.0.0.0 to 239.255.255.255
+224.0.0.0/24,Local Network Control Block,RFC Special Purpose,RFC 5771,Local network multicast,TTL=1 only - link-local multicast
+224.0.0.1/32,All Hosts,RFC Special Purpose,RFC 1112,All hosts on local segment,Standard all-hosts multicast
+224.0.0.2/32,All Routers,RFC Special Purpose,RFC 1112,All routers on local segment,Standard all-routers multicast
+224.0.0.251/32,mDNS,RFC Special Purpose,RFC 6762,Multicast DNS,Bonjour/Avahi service discovery
+224.0.0.252/32,LLMNR,RFC Special Purpose,RFC 4795,Link-Local Multicast Name Resolution,Windows name resolution fallback
+233.252.0.0/24,MCAST-TEST-NET,RFC Documentation,RFC 6676,Multicast documentation examples,Documentation-only multicast range
+239.255.255.250/32,SSDP,RFC Special Purpose,RFC 2608,Simple Service Discovery Protocol,UPnP device discovery - common Windows traffic
+240.0.0.0/4,Reserved for Future Use,RFC Special Purpose,RFC 1112 Section 4,Reserved - formerly Class E,268M addresses reserved
+255.255.255.255/32,Limited Broadcast,RFC Special Purpose,RFC 919 / RFC 922,Limited broadcast destination,Local network broadcast only

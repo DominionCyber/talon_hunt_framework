@@ -1,0 +1,75 @@
+name: talon_win_normalize_browserextensioninstalled
+description: Normalizes event fields using conditional logic to standardize values across different event sources.
+visualization:
+  options:
+    columns:
+    - fieldName: '@timestamp'
+      format: datetime
+      type: field
+      width: 200
+    - groupByPrefix: false
+      header: Field List
+      type: fieldList
+    newestAtBottom: true
+    showOnlyFirstLine: false
+  type: list-view
+labels:
+- talon_hunt_framework
+- asset
+- normalize
+- browserextensioninstalled
+- windows
+$schema: https://schemas.humio.com/query/v0.6.0
+timeInterval:
+  isLive: false
+  start: 15m
+queryString: |-
+  // =====================================================
+  // NORMALIZATION
+  // =====================================================
+  | case {
+      BrowserExtensionInstallMethod = "0" | BrowserExtensionInstallMethod := "UNIDENTIFIED";
+      BrowserExtensionInstallMethod = "1" | BrowserExtensionInstallMethod := "BROWSER";
+      BrowserExtensionInstallMethod = "2" | BrowserExtensionInstallMethod := "WEBSTORE";
+      BrowserExtensionInstallMethod = "3" | BrowserExtensionInstallMethod := "GPO";
+      BrowserExtensionInstallMethod = "4" | BrowserExtensionInstallMethod := "SIDELOADED";
+      BrowserExtensionInstallMethod = "5" | BrowserExtensionInstallMethod := "WEBSTORE_3RD_PARTY";
+      *
+    }
+
+  | case {
+      BrowserName = "0"  | BrowserName := "UNKNOWN";
+      BrowserName = "1"  | BrowserName := "FIREFOX";
+      BrowserName = "2"  | BrowserName := "SAFARI";
+      BrowserName = "3"  | BrowserName := "CHROME";
+      BrowserName = "4"  | BrowserName := "EDGE";
+      BrowserName = "5"  | BrowserName := "EDGE_CHROMIUM";
+      BrowserName = "6"  | BrowserName := "INTERNET_EXPLORER";
+      BrowserName = "7"  | BrowserName := "EDGE_LEGACY";
+      BrowserName = "8"  | BrowserName := "IE_TYPED_URL";
+      BrowserName = "9"  | BrowserName := "FIREFOX_APP";
+      BrowserName = "10" | BrowserName := "CHROME_BETA";
+      BrowserName = "11" | BrowserName := "CHROME_DEV";
+      BrowserName = "12" | BrowserName := "EDGE_BETA";
+      BrowserName = "13" | BrowserName := "EDGE_DEV";
+      BrowserName = "14" | BrowserName := "SAFARI_TECH";
+      *
+    }
+
+  | case {
+      UpdateFlag = "0" | UpdateFlag := "UPDATE_INVALID";
+      UpdateFlag = "1" | UpdateFlag := "UPDATE_ENUMERATION";
+      UpdateFlag = "2" | UpdateFlag := "UPDATE_REMOVED";
+      UpdateFlag = "3" | UpdateFlag := "UPDATE_ADDED";
+      UpdateFlag = "4" | UpdateFlag := "UPDATE_OBSOLETE";
+      UpdateFlag = "5" | UpdateFlag := "UPDATE_REVISED";
+      *
+    }
+
+  | case {
+      BrowserExtensionArchitecture = "0" | BrowserExtensionArchitecture := "UNKNOWN";
+      BrowserExtensionArchitecture = "2" | BrowserExtensionArchitecture := "MANIFEST_V2";
+      BrowserExtensionArchitecture = "3" | BrowserExtensionArchitecture := "MANIFEST_V3";
+      BrowserExtensionArchitecture = "4" | BrowserExtensionArchitecture := "SAFARI_APP";
+      *
+    }

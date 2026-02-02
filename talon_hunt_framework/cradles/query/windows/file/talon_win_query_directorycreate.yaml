@@ -1,0 +1,58 @@
+name: talon_win_query_directorycreate
+description: Base query for directory creation events. Normalizes path and file system metadata.
+visualization:
+  options:
+    cell-overflow: wrap-text
+    column-overflow: truncate
+    configured-columns: {}
+    row-numbers-enabled: false
+  type: table-view
+labels:
+- talon_hunt_framework
+- query
+- directorycreate
+- windows
+$schema: https://schemas.humio.com/query/v0.6.0
+timeInterval:
+  isLive: false
+  start: 15m
+queryString: |-
+  // =====================================================
+  // SEARCH
+  // =====================================================
+  #event_simpleName=DirectoryCreate event_platform=Win
+
+  // =====================================================
+  // SEARCH ASSETS
+  // =====================================================
+  | $talon_convert_time_utc()
+  | $talon_utility_falcon_helper()
+  | $talon_win_normalize_directorycreate()
+  | $talon_win_deconflict_directorycreate()
+  | $talon_win_normalize_file_path(TargetField=DirectoryFilePath)
+  | $talon_win_normalize_file_path(TargetField=DirectoryTargetFileName)
+
+  // =====================================================
+  // TABLE
+  // =====================================================
+  | table(
+      [
+        utc_time,
+        ComputerName,
+        DirectoryFileName,
+        DirectoryFilePath,
+        DirectoryTargetFileName,
+        FileIdentifier,
+        FileObject,
+        DesiredAccess,
+        ShareAccess,
+        MajorFunction,
+        MinorFunction,
+        IrpFlags,
+        Information,
+        Status,
+        FileEcpBitmask,
+        FileEcpBitmask_mask
+      ],
+      limit=max
+    )
