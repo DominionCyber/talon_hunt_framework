@@ -70,10 +70,7 @@ Community contributions are **highly encouraged** and help make the Talon Hunt F
    Create your own fork of the project.
 
 2. **Create a feature branch**  
-   Make a new branch for your work:
-   - `feature/<short-name>`
-   - `fix/<short-name>`
-   - `docs/<short-name>`
+   Make a new branch for your work.
 
 3. **Make your changes**  
    Keep changes focused and aligned to the framework’s structure and conventions.
