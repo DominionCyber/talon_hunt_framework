@@ -1,0 +1,65 @@
+name: talon_hunt_registry_shell_command_crypto_classes
+description: Detects the setting of a registry inside the "\Shell\Open\Command" value with PowerShell classes from the "System.Security.Cryptography" namespace. Used for on-the-fly decryption of malicious payloads during file type handler execution. Seen in SolarMarker campaigns. Adapted from Sigma rule 1c2a3268-3881-414a-80af-a5b313b14c0e.
+visualization:
+  options:
+    cell-overflow: wrap-text
+    column-overflow: truncate
+    configured-columns: {}
+    row-numbers-enabled: false
+  type: table-view
+labels:
+- talon_hunt_framework
+- hunt
+- asepvalueupdate
+- windows
+- threat_hunt
+- defense_evasion
+- execution
+- persistence
+- privilege_escalation
+- t1059.001
+- t1027.010
+- t1547.001
+- sigma
+- high_signal
+$schema: https://schemas.humio.com/query/v0.6.0
+timeInterval:
+  isLive: false
+  start: 15m
+queryString: |-
+  // =====================================================
+  // SEARCH
+  // =====================================================
+  #event_simpleName=AsepValueUpdate event_platform=Win
+  | RegObjectName=/\\Shell\\Open\\Command/i
+  // Shell\Open\Command: file type handler registry key - defines what executes when a file extension is opened, common persistence vector
+  | RegStringValue=/(powershell|pwsh)/i
+  // PowerShell in registry value: powershell/pwsh execution triggered by file association
+  | RegStringValue=/\.AesCryptoServiceProvider|\.DESCryptoServiceProvider|\.DSACryptoServiceProvider|\.RC2CryptoServiceProvider|\.Rijndael|\.RSACryptoServiceProvider|\.TripleDESCryptoServiceProvider|System\.Security\.Cryptography\./i
+  // System.Security.Cryptography classes (AES/DES/DSA/RC2/Rijndael/RSA/TripleDES) - .NET crypto API used to decrypt embedded payloads on-the-fly when file handler executes
+
+  // =====================================================
+  // SEARCH ASSETS
+  // =====================================================
+  | $talon_convert_time_utc()
+  | $talon_utility_falcon_helper()
+  | $talon_win_normalize_asepvalueupdate()
+
+  // =====================================================
+  // TABLE
+  // =====================================================
+  | table(
+      [
+          utc_time,
+          ComputerName,
+          UserName,
+          RegObjectName,
+          RegStringValue,
+          RegValueName,
+          RegType,
+          AsepClass,
+          AsepFlags,
+          AsepValueType
+      ],
+      limit=max
+  )

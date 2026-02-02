@@ -1,0 +1,80 @@
+name: talon_hunt_cmd_shell_output_redirect
+description: Detects cmd.exe using output redirection (>). Often used by attackers to redirect recon output (hostname, dir, systeminfo) to files for staging and exfiltration. Adapted from Sigma rule 4f4eaa9f-5ad4-410c-a4be-bc6132b0175a.
+visualization:
+  options:
+  cell-overflow: wrap-text
+  column-overflow: truncate
+  configured-columns: {}
+  row-numbers-enabled: false
+  type: table-view
+labels:
+- talon_hunt_framework
+- hunt
+- processrollup2
+- syntheticprocessrollup2
+- windows
+- threat_hunt
+- discovery
+- t1082
+- cmd
+- redirection
+- low_signal
+- sigma
+$schema: https://schemas.humio.com/query/v0.6.0
+timeInterval:
+  isLive: false
+  start: 15m
+queryString: |-
+  // =====================================================
+  // SEARCH
+  // =====================================================
+  #event_simpleName=/ProcessRollup2|SyntheticProcessRollup2/ event_platform=Win
+  | FileName=/cmd\.exe/i OR OriginalFilename=/cmd\.exe/i
+  | CommandLine=/>/i
+  // cmd.exe redirection: > writes stdout to file (staging, exfil, defense evasion)
+
+  // =====================================================
+  // SEARCH ASSETS
+  // =====================================================
+  | $talon_convert_time_utc()
+  | $talon_utility_falcon_helper()
+  | $talon_win_format_callstackmodules()
+  | $talon_win_normalize_file_path(TargetField=FilePath)
+  | $talon_win_normalize_file_path(TargetField=CallStackModules)
+  | $talon_win_normalize_nt_authority_system_user()
+  | $talon_win_normalize_processrollup2()
+
+  // =====================================================
+  // TABLE
+  // =====================================================
+  | table(
+      [
+          utc_time,
+          ComputerName,
+          UserName,
+          GrandParentBaseFileName,
+          ParentBaseFileName,
+          FilePath,
+          FileName,
+          CommandLine,
+          SHA256HashData,
+          CallStackModules,
+          HostUrl,
+          RefererUrl,
+          OriginalFilename,
+          SessionId,
+          ImageSubsystem,
+          IntegrityLevel,
+          CreateProcessType,
+          ProcessCreateFlags,
+          ProcessCreateFlags_mask,
+          ProcessParameterFlags,
+          ProcessParameterFlags_mask,
+          ProcessSxsFlags,
+          ProcessSxsFlags_mask,
+          RawProcessId,
+          SignInfoFlags,
+          SignInfoFlags_mask
+      ],
+      limit=max
+  )

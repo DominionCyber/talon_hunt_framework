@@ -1,0 +1,116 @@
+name: talon_hunt_diskshadow_child_process
+description: Detects any child process spawning from "Diskshadow.exe". This could be due to executing Diskshadow in interpreter mode or script mode and using the "exec" flag to launch other applications. Adapted from Sigma rule 56b1dde8-b274-435f-a73a-fb75eb81262a. This is well signatured by Crowdstrike out of the box.
+visualization:
+  options:
+  cell-overflow: wrap-text
+  column-overflow: truncate
+  configured-columns: {}
+  row-numbers-enabled: false
+  type: table-view
+labels:
+- talon_hunt_framework
+- hunt
+- processrollup2
+- syntheticprocessrollup2
+- windows
+- threat_hunt
+- execution
+- defense_evasion
+- sigma
+- high_signal
+$schema: https://schemas.humio.com/query/v0.6.0
+timeInterval:
+  isLive: false
+  start: 15m
+queryString: |-
+  // =====================================================
+  // L1 SEARCH
+  // =====================================================
+  defineTable(
+      query={
+        #event_simpleName=/ProcessRollup2|SyntheticProcessRollup2/ event_platform=Win (FilePath!=/\\Windows\\System32\\/i (FileName!=/werfault\.exe/i OR OriginalFilename!=/werfault\.exe/i))
+        // Exclude WerFault crash handler - normal system behavior when diskshadow errors out
+        | $talon_win_deconflict_processrollup2()
+        | $talon_win_format_callstackmodules_child_process()
+        | $talon_win_normalize_file_path(TargetField=ChildFilePath)
+        | $talon_win_normalize_file_path(TargetField=ChildCallStackModules)
+      },
+      name=processes,
+      include=[
+          ParentProcessId,
+          ChildFilePath,
+          ChildFileName,
+          ChildCommandLine,
+          ChildSHA256HashData,
+          ChildCallStackModules,
+          ChildOriginalFilename
+      ]
+  )
+
+  // =====================================================
+  // L2 SEARCH
+  // =====================================================
+  | #event_simpleName=/ProcessRollup2|SyntheticProcessRollup2/ event_platform=Win FileName=/diskshadow\.exe/i
+  // diskshadow.exe: LOLBin for VSS manipulation - "exec" flag in script/interpreter mode spawns arbitrary processes, used for NTDS.dit theft and evasion
+
+  // =====================================================
+  // MATCH STATEMENT
+  // =====================================================
+  | match(
+      table=processes,
+      field=TargetProcessId,
+      column=ParentProcessId
+  )
+
+  // =====================================================
+  // L2 SEARCH ASSETS
+  // =====================================================
+  | $talon_convert_time_utc()
+  | $talon_utility_falcon_helper()
+  | $talon_win_format_callstackmodules()
+  | $talon_win_normalize_file_path(TargetField=FilePath)
+  | $talon_win_normalize_file_path(TargetField=CallStackModules)
+  | $talon_win_normalize_nt_authority_system_user()
+  | $talon_win_normalize_processrollup2()
+
+  // =====================================================
+  // TABLE
+  // =====================================================
+  | groupBy(
+      [aid],
+      function=[
+          collect([
+              utc_time,
+              ComputerName,
+              UserName,
+              GrandParentBaseFileName,
+              ParentBaseFileName,
+              FilePath,
+              FileName,
+              CommandLine,
+              SHA256HashData,
+              CallStackModules,
+              HostUrl,
+              RefererUrl,
+              OriginalFilename,
+              SessionId,
+              ImageSubsystem,
+              IntegrityLevel,
+              CreateProcessType,
+              ProcessCreateFlags,
+              ProcessCreateFlags_mask,
+              ProcessParameterFlags,
+              ProcessParameterFlags_mask,
+              ProcessSxsFlags,
+              ProcessSxsFlags_mask,
+              RawProcessId,
+              ChildFilePath,
+              ChildFileName,
+              ChildCommandLine,
+              ChildSHA256HashData,
+              ChildOriginalFilename,
+              ChildCallStackModules
+          ])
+      ],
+      limit=max
+  )

@@ -1,0 +1,79 @@
+name: talon_hunt_winscp_ftp_connection
+description: Detects the execution of WinSCP with the "-command" and "open" flags to open an FTP/SFTP connection. Akira ransomware uses this technique for data exfiltration. Adapted from Sigma rule c1477deb-37cf-4439-9ffb-44499acb89d0.
+visualization:
+  options:
+  cell-overflow: wrap-text
+  column-overflow: truncate
+  configured-columns: {}
+  row-numbers-enabled: false
+  type: table-view
+labels:
+- talon_hunt_framework
+- hunt
+- processrollup2
+- syntheticprocessrollup2
+- windows
+- threat_hunt
+- exfiltration
+- t1048
+- sigma
+- medium_signal
+$schema: https://schemas.humio.com/query/v0.6.0
+timeInterval:
+  isLive: false
+  start: 15m
+queryString: |-
+  // =====================================================
+  // SEARCH
+  // =====================================================
+  #event_simpleName=/ProcessRollup2|SyntheticProcessRollup2/ event_platform=Win 
+  | FileName=/winscp\.exe/i OR OriginalFilename=/winscp\.exe/i
+  // WinSCP.exe: legitimate SFTP/FTP client - commonly abused for automated data exfiltration due to CLI scripting support
+  | CommandLine=/\-command/i CommandLine=/open\s/i CommandLine=/ftp\:\/\//i
+  // -command/--command with "open ftp://": scripted FTP/SFTP connection - Akira ransomware uses this for hands-off exfil to attacker-controlled servers
+
+  // =====================================================
+  // SEARCH ASSETS
+  // =====================================================
+  | $talon_convert_time_utc()
+  | $talon_utility_falcon_helper()
+  | $talon_win_format_callstackmodules()
+  | $talon_win_normalize_file_path(TargetField=FilePath)
+  | $talon_win_normalize_file_path(TargetField=CallStackModules)
+  | $talon_win_normalize_nt_authority_system_user()
+  | $talon_win_normalize_processrollup2()
+
+  // =====================================================
+  // TABLE
+  // =====================================================
+  | table(
+      [
+          utc_time,
+          ComputerName,
+          UserName,
+          GrandParentBaseFileName,
+          ParentBaseFileName,
+          FilePath,
+          FileName,
+          CommandLine,
+          SHA256HashData,
+          CallStackModules,
+          HostUrl,
+          RefererUrl,
+          OriginalFilename,
+          SessionId,
+          ImageSubsystem,
+          IntegrityLevel,
+          CreateProcessType,
+          ProcessCreateFlags,
+          ProcessCreateFlags_mask,
+          ProcessParameterFlags,
+          ProcessParameterFlags_mask,
+          ProcessSxsFlags,
+          ProcessSxsFlags_mask,
+          RawProcessId,
+          SignInfoFlags,
+          SignInfoFlags_mask
+      ],
+      limit=max
+  )

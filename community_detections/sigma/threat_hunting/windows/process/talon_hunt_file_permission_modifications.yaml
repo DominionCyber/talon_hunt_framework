@@ -1,0 +1,85 @@
+name: talon_hunt_file_permission_modifications
+description: Detects a file or folder's permissions being modified or tampered with using cacls, icacls, attrib, or takeown. Used by malware like Defeat-Defender to weaken security controls. Adapted from Sigma rule 37ae075c-271b-459b-8d7b-55ad5f993dd8.
+visualization:
+  options:
+  cell-overflow: wrap-text
+  column-overflow: truncate
+  configured-columns: {}
+  row-numbers-enabled: false
+  type: table-view
+labels:
+- talon_hunt_framework
+- hunt
+- processrollup2
+- syntheticprocessrollup2
+- windows
+- threat_hunt
+- defense_evasion
+- t1222.001
+- sigma
+- medium_signal
+$schema: https://schemas.humio.com/query/v0.6.0
+timeInterval:
+  isLive: false
+  start: 15m
+queryString: |-
+  // =====================================================
+  // SEARCH
+  // =====================================================
+  #event_simpleName=/ProcessRollup2|SyntheticProcessRollup2/ event_platform=Win 
+  | (FileName=/(cacls|icacls|net|net1)\.exe/i CommandLine=/(\/grant|\/setowner|\/inheritance\:r)/i) OR (FileName=/attrib\.exe/i CommandLine=/\-r/i) OR (FileName=/takeown\.exe/i)
+  // cacls/icacls: legacy and modern ACL editors - /grant (add perms), /setowner (take ownership), /inheritance:r (strip inherited ACEs)
+  // net/net1: share command has grant option for share permissions
+  // takeown.exe: ownership seizure utility - allows bypassing ACLs by taking ownership, commonly abused to access protected system files
+  | CommandLine!=/ICACLS\sC\:\\ProgramData\\dynatrace\\gateway\\config\\connectivity\.history\s\/reset/i
+  | CommandLine!=/ICACLS\sC\:\\ProgramData\\dynatrace\\gateway\\config\\config\.properties\s\/grant\s:r/i CommandLine!=/S\-1\-5\-19\:F/i
+  // Exclude Dynatrace legitimate config file permission resets
+  | CommandLine!=/\\AppData\\Local\\Programs\\Microsoft\sVS\sCode/i
+  | CommandLine!=/\:\\Program Files\\Microsoft\sVS\sCode/i
+  // Exclude VS Code installation/update operations
+
+  // =====================================================
+  // SEARCH ASSETS
+  // =====================================================
+  | $talon_convert_time_utc()
+  | $talon_utility_falcon_helper()
+  | $talon_win_format_callstackmodules()
+  | $talon_win_normalize_file_path(TargetField=FilePath)
+  | $talon_win_normalize_file_path(TargetField=CallStackModules)
+  | $talon_win_normalize_nt_authority_system_user()
+  | $talon_win_normalize_processrollup2()
+
+  // =====================================================
+  // TABLE
+  // =====================================================
+  | table(
+      [
+          utc_time,
+          ComputerName,
+          UserName,
+          GrandParentBaseFileName,
+          ParentBaseFileName,
+          FilePath,
+          FileName,
+          CommandLine,
+          SHA256HashData,
+          CallStackModules,
+          HostUrl,
+          RefererUrl,
+          OriginalFilename,
+          SessionId,
+          ImageSubsystem,
+          IntegrityLevel,
+          CreateProcessType,
+          ProcessCreateFlags,
+          ProcessCreateFlags_mask,
+          ProcessParameterFlags,
+          ProcessParameterFlags_mask,
+          ProcessSxsFlags,
+          ProcessSxsFlags_mask,
+          RawProcessId,
+          SignInfoFlags,
+          SignInfoFlags_mask
+      ],
+      limit=max
+  )

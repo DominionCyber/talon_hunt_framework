@@ -1,0 +1,84 @@
+name: talon_hunt_powershell_long_commandline
+description: Detects unusually long PowerShell command lines with a length of 1000 characters or more. Long command lines often indicate obfuscation, Base64 encoded payloads, or compressed scripts. Adapted from Sigma rule d0d28567-4b9a-45e2-8bbc-fb1b66a1f7f6.
+visualization:
+  options:
+  cell-overflow: wrap-text
+  column-overflow: truncate
+  configured-columns: {}
+  row-numbers-enabled: false
+  type: table-view
+labels:
+- talon_hunt_framework
+- hunt
+- processrollup2
+- syntheticprocessrollup2
+- windows
+- threat_hunt
+- execution
+- t1059.001
+- sigma
+- medium_signal
+$schema: https://schemas.humio.com/query/v0.6.0
+timeInterval:
+  isLive: false
+  start: 15m
+queryString: |-
+  // =====================================================
+  // SEARCH
+  // =====================================================
+  #event_simpleName=/ProcessRollup2|SyntheticProcessRollup2/ event_platform=Win 
+  | FileName=/(powershell|pwsh)\.exe/i OR OriginalFilename=/powershell\.exe/i OR OriginalFilename=/pwsh\.dll/i
+  // powershell.exe/pwsh.exe: Windows scripting engine - pwsh.exe is PowerShell Core (v6+), both heavily abused for malware execution
+
+  // =====================================================
+  // SEARCH ASSETS
+  // =====================================================
+  | $talon_convert_time_utc()
+  | $talon_utility_falcon_helper()
+  | $talon_win_format_callstackmodules()
+  | $talon_win_normalize_file_path(TargetField=FilePath)
+  | $talon_win_normalize_file_path(TargetField=CallStackModules)
+  | $talon_win_normalize_nt_authority_system_user()
+  | $talon_win_normalize_processrollup2()
+  | length("CommandLine", as="cmdLength")
+
+  // =====================================================
+  // THRESHOLD
+  // =====================================================
+  | cmdLength > 100
+
+  // =====================================================
+  // TABLE
+  // =====================================================
+  | table(
+      [
+          utc_time,
+          ComputerName,
+          UserName,
+          GrandParentBaseFileName,
+          ParentBaseFileName,
+          FilePath,
+          FileName,
+          CommandLine,
+          cmdLength,
+          SHA256HashData,
+          CallStackModules,
+          HostUrl,
+          RefererUrl,
+          OriginalFilename,
+          SessionId,
+          ImageSubsystem,
+          IntegrityLevel,
+          CreateProcessType,
+          ProcessCreateFlags,
+          ProcessCreateFlags_mask,
+          ProcessParameterFlags,
+          ProcessParameterFlags_mask,
+          ProcessSxsFlags,
+          ProcessSxsFlags_mask,
+          RawProcessId,
+          SignInfoFlags,
+          SignInfoFlags_mask
+      ],
+      limit=max
+  )

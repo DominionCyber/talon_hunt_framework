@@ -1,0 +1,58 @@
+name: talon_hunt_run_dialog_command_execution
+description: Detects execution of commands via the Run dialog box by checking values of the "RunMRU" registry key. Threat actors abuse this to deceive users into pasting malicious commands disguised as CAPTCHA verification steps. Seen in Lumma infostealer delivery. Adapted from Sigma rule f9d091f6-f1c7-4873-a24f-050b4a02b4dd.
+visualization:
+  options:
+    cell-overflow: wrap-text
+    column-overflow: truncate
+    configured-columns: {}
+    row-numbers-enabled: false
+  type: table-view
+labels:
+- talon_hunt_framework
+- hunt
+- asepvalueupdate
+- windows
+- threat_hunt
+- execution
+- sigma
+- medium_signal
+$schema: https://schemas.humio.com/query/v0.6.0
+timeInterval:
+  isLive: false
+  start: 15m
+queryString: |-
+  // =====================================================
+  // SEARCH
+  // =====================================================
+  #event_simpleName=RegSystemConfigValueUpdate event_platform=Win
+  | RegObjectName=/\\Microsoft\\Windows\\CurrentVersion\\Explorer\\RunMRU/i
+  // RunMRU registry: stores commands entered in Win+R dialog (social engineering vector)
+  | RegStringValue!=/\%appdata\%\\1|\%localappdata\%\\1|\%public\%\\1|\%temp\%\\1|calc\\1|dxdiag\\1|explorer\\1|gpedit\.msc\\1|mmc\\1|notepad\\1|regedit\\1|services\.msc\\1|winver\\1|ping/i
+  // RunMRU typical usage: ignore common Win+R command combos found organically in environments
+  | RegValueName!=/MRUList/i
+  // Exclude MRUList value itself
+  
+  // =====================================================
+  // SEARCH ASSETS
+  // =====================================================
+  | $talon_convert_time_utc()
+  | $talon_utility_falcon_helper()
+  | $talon_win_normalize_regsystemconfigvalueupdate()
+
+  // =====================================================
+  // TABLE
+  // =====================================================
+  | table(
+      [
+          utc_time,
+          ComputerName,
+          RegObjectName,
+          RegStringValue,
+          RegValueName,
+          RegType,
+          RegOperationType,
+          RegClassification,
+          RegClassificationFlags
+      ],
+      limit=max
+  )

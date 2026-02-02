@@ -1,0 +1,81 @@
+name: talon_hunt_cmd_set_file_append
+description: Detects cmd.exe SET command with /p flag used to append content to files via redirection. Used by Mimic ransomware and other threats to modify files indirectly. Adapted from Sigma rule 65e4c134-ee52-4099-9e35-5e17a4b45c62.
+visualization:
+  options:
+  cell-overflow: wrap-text
+  column-overflow: truncate
+  configured-columns: {}
+  row-numbers-enabled: false
+  type: table-view
+labels:
+- talon_hunt_framework
+- hunt
+- processrollup2
+- syntheticprocessrollup2
+- windows
+- threat_hunt
+- execution
+- defense_evasion
+- cmd
+- set
+- file_write
+- low_signal
+- sigma
+$schema: https://schemas.humio.com/query/v0.6.0
+timeInterval:
+  isLive: false
+  start: 15m
+queryString: |-
+  // =====================================================
+  // SEARCH
+  // =====================================================
+  #event_simpleName=/ProcessRollup2|SyntheticProcessRollup2/ event_platform=Win
+  | FileName=/cmd\.exe/i OR OriginalFilename=/cmd\.exe/i
+  | CommandLine=/\/c\s+set\s+\/p\=/i OR CommandLine=/\"set\s+\/p\=/i
+  // set /p= with >> appends content to file without echo (file modification technique)
+
+  // =====================================================
+  // SEARCH ASSETS
+  // =====================================================
+  | $talon_convert_time_utc()
+  | $talon_utility_falcon_helper()
+  | $talon_win_format_callstackmodules()
+  | $talon_win_normalize_file_path(TargetField=FilePath)
+  | $talon_win_normalize_file_path(TargetField=CallStackModules)
+  | $talon_win_normalize_nt_authority_system_user()
+  | $talon_win_normalize_processrollup2()
+
+  // =====================================================
+  // TABLE
+  // =====================================================
+  | table(
+      [
+          utc_time,
+          ComputerName,
+          UserName,
+          GrandParentBaseFileName,
+          ParentBaseFileName,
+          FilePath,
+          FileName,
+          CommandLine,
+          SHA256HashData,
+          CallStackModules,
+          HostUrl,
+          RefererUrl,
+          OriginalFilename,
+          SessionId,
+          ImageSubsystem,
+          IntegrityLevel,
+          CreateProcessType,
+          ProcessCreateFlags,
+          ProcessCreateFlags_mask,
+          ProcessParameterFlags,
+          ProcessParameterFlags_mask,
+          ProcessSxsFlags,
+          ProcessSxsFlags_mask,
+          RawProcessId,
+          SignInfoFlags,
+          SignInfoFlags_mask
+      ],
+      limit=max
+  )
