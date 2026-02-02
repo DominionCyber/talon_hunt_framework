@@ -12,13 +12,6 @@ Talon Hunt Framework is a collection of saved searches designed for native impor
 
 Talon leverages the power of CrowdStrike Query Language (CQL) to provide analysts and engineers with a standardized framework for building, organizing, and maintaining detection content. By establishing a common language across security teams, Talon supports proper CI/CD pipelines for hunt and detection workflows, ensuring queries remain consistent, version-controlled, and production-ready.
 
-> [!WARNING]
-> ## 🛡️ Enterprise Support Available
-> Dominion Cyber offers the **Talon Hunt Framework** for organizations looking for a **maintained instance of Talon**, along with associated **threat intelligence, detection and hunt feeds**.
->
-> **Interested in enterprise support?**  
-> Reach out via the [Contact page](https://www.dominioncyber.net/) to get started.
-
 ## Key Capabilities
 
 - **Performance-Optimized Queries:** All queries are written to be performant by default, reducing overhead so even complex, multi-condition searches execute efficiently at scale
@@ -35,9 +28,27 @@ Talon leverages the power of CrowdStrike Query Language (CQL) to provide analyst
 
 Whether you're hunting for lateral movement, investigating credential abuse, or building net-new detections, Talon accelerates time-to-insight across your security operations.
 
+> [!IMPORTANT]
+> ## 👁️ Community Group
+> Dominion Cyber is in the process of migrating our defender community to a more scalable platform. This community will bring together like-minded defenders to collaborate, share insights, and support one another.
+>
+> ### What to Expect
+> Membership will be limited to vetted individuals only. To join, applicants must either:
+> - Receive a vouch from a current active member
+> - Complete a screening process
+>
+> This approach helps maintain the integrity of the community and reduces the risk of exposing sensitive information.
+
 ## Community Edition
 
 The Community Edition of Talon Hunt Framework includes conversions from popular community rule frameworks such as Sigma, Elastic Detection Rules, and others, bringing battle-tested detection logic directly into your Falcon environment. Beyond pre-built conversions, Talon provides a conversion framework that simplifies the process of translating external rule formats into optimized CQL, enabling teams to rapidly onboard detection content from across the security community.
+
+> [!IMPORTANT]
+> ## 🛡️ Enterprise Support Available
+> Dominion Cyber offers the **Talon Hunt Framework** for organizations looking for a **maintained instance of Talon**, along with associated **threat intelligence, detection and hunt feeds**.
+>
+> **Interested in enterprise support?**  
+> Reach out via the [Contact page](https://www.dominioncyber.net/) to get started.=
 
 ## Useful Links
 
