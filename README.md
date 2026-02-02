@@ -60,6 +60,42 @@ The Community Edition of Talon Hunt Framework includes conversions from popular 
 - [Community Detections/Sigma/Threat Hunts](https://github.com/DominionCyber/talon_hunt_framework/tree/main/community_detections/sigma/threat_hunting)
 - [Talon Hunt Framework](https://github.com/DominionCyber/talon_hunt_framework/tree/main/talon_hunt_framework)
 
+## 🤝 Contributions
+
+Community contributions are **highly encouraged** and help make the Talon Hunt Framework better for everyone. Whether you’re fixing bugs, improving documentation, adding detections, or sharing hunt ideas, we welcome your input.
+
+### How to Contribute (High Level)
+
+1. **Fork the repository**  
+   Create your own fork of the project.
+
+2. **Create a feature branch**  
+   Make a new branch for your work:
+   - `feature/<short-name>`
+   - `fix/<short-name>`
+   - `docs/<short-name>`
+
+3. **Make your changes**  
+   Keep changes focused and aligned to the framework’s structure and conventions.
+
+4. **Test / validate**  
+   Ensure your changes work as expected and do not break existing functionality.
+
+5. **Open a Pull Request (PR)**  
+   Submit a PR back to the main repository with:
+   - a clear summary of the change
+   - why it’s needed
+   - any relevant examples or screenshots (if applicable)
+
+6. **Review + merge**  
+   A maintainer will review the PR, request updates if needed, and merge once approved.
+
+### What We Love to See
+- New hunts, detections, or enrichment ideas
+- Bug fixes and performance improvements
+- Documentation updates and examples
+- Better defaults and cleaner developer experience
+
 ## Contact Dominion Cyber
 
 Please visit the [contact page](https://www.dominioncyber.net/) on the Dominion Cyber official website to get in touch.
