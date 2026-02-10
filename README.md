@@ -1,6 +1,6 @@
 <p align="center">
     <picture>
-        <img src="ui/logo/THFLogoV2.png" alt="Talon Hunt Framework Community Edition" width='1200' />
+        <img src="ui/logo/THFLogoV3.png" alt="Talon Hunt Framework Community Edition" width='1200' />
     </picture>
 </p>
 
