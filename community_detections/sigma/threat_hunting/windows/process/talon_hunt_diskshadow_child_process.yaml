@@ -1,6 +1,5 @@
 name: talon_hunt_diskshadow_child_process
-description: Detects any child process spawning from "Diskshadow.exe". This could be due to executing Diskshadow in interpreter mode or script mode and using the "exec" flag to launch other applications. Adapted from Sigma rule 56b1dde8-b274-435f-a73a-fb75eb81262a. This is well signatured by Crowdstrike out of the box.
-visualization:
+description: Detects any child process spawning from "Diskshadow.exe". This could be due to executing Diskshadow in interpreter mode or script mode and using the "exec" flag to launch other applications. Adapted from Sigma rule 56b1dde8-b274-435f-a73a-fb75eb81262a. Natively detected via prevention policy.
   options:
   cell-overflow: wrap-text
   column-overflow: truncate
