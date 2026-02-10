@@ -1,5 +1,5 @@
 name: talon_hunt_diskshadow_script_mode
-description: Detects execution of "Diskshadow.exe" in script mode using the "/s" flag. Attackers often abuse "diskshadow" to execute scripts that delete shadow copies or extract NTDS.dit. Adapted from Sigma rule 0c2f8629-7129-4a8a-9897-7e0768f13ff2. OOB Signatured activity.
+description: Detects execution of "Diskshadow.exe" in script mode using the "/s" flag. Attackers often abuse "diskshadow" to execute scripts that delete shadow copies or extract NTDS.dit. Adapted from Sigma rule 0c2f8629-7129-4a8a-9897-7e0768f13ff2. Natively detected via prevention policy.
 visualization:
   options:
   cell-overflow: wrap-text
