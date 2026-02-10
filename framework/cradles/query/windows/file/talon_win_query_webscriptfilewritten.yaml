@@ -1,0 +1,58 @@
+name: talon_win_query_webscriptfilewritten
+description: Base query for web script file creation events. Normalizes path and file system metadata.
+visualization:
+  options:
+    cell-overflow: wrap-text
+    column-overflow: truncate
+    configured-columns: {}
+    row-numbers-enabled: false
+  type: table-view
+labels:
+- talon_hunt_framework
+- query
+- webscriptfilewritten
+- windows
+$schema: https://schemas.humio.com/query/v0.6.0
+timeInterval:
+  isLive: false
+  start: 15m
+queryString: |-
+  // =====================================================
+  // SEARCH
+  // =====================================================
+  #event_simpleName=WebScriptFileWritten event_platform=Win
+
+  // =====================================================
+  // SEARCH ASSETS
+  // =====================================================
+  | $talon_convert_time_utc()
+  | $talon_utility_falcon_helper()
+  | $talon_win_normalize_webscriptfilewritten()
+  | $talon_win_deconflict_webscriptfilewritten()
+  | $talon_win_normalize_file_path(TargetField=WebScriptTargetFileName)
+  | $talon_win_normalize_file_path(TargetField=WebScriptFilePath)
+  | $talon_convert_file_size()
+
+  // =====================================================
+  // TABLE
+  // =====================================================
+  | table(
+      [
+        utc_time,
+        ComputerName,
+        ContextImageFileName,
+        ContextBaseFileName,
+        WebScriptFilePath,
+        WebScriptFileName,
+        WebScriptTargetFileName,
+        FileIdentifier,
+        FileObject,
+        WebScriptFileSize,
+        CommonSize,
+        FileEcpBitmask,
+        FileEcpBitmask_mask,
+        FileWrittenFlags,
+        FileWrittenFlags_mask
+      ],
+      limit=max
+    )

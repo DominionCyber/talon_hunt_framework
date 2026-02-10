@@ -1,0 +1,56 @@
+name: talon_win_query_newscriptwritten
+description: Base query for New Script file creation events. Normalizes path and file system metadata.
+visualization:
+  options:
+    cell-overflow: wrap-text
+    column-overflow: truncate
+    configured-columns: {}
+    row-numbers-enabled: false
+  type: table-view
+labels:
+- talon_hunt_framework
+- query
+- newscriptwritten
+- windows
+$schema: https://schemas.humio.com/query/v0.6.0
+timeInterval:
+  isLive: false
+  start: 15m
+queryString: |-
+  // =====================================================
+  // SEARCH
+  // =====================================================
+  #event_simpleName=NewScriptWritten event_platform=Win
+
+  // =====================================================
+  // SEARCH ASSETS
+  // =====================================================
+  | $talon_convert_time_utc()
+  | $talon_utility_falcon_helper()
+  | $talon_win_normalize_newscriptwritten()
+  | $talon_win_deconflict_newscriptwritten()
+  | $talon_win_normalize_file_path(TargetField=ContextImageFileName)
+  | $talon_win_normalize_file_path(TargetField=NewScriptFilePath)
+
+  // =====================================================
+  // TABLE
+  // =====================================================
+  | table(
+      [
+        utc_time,
+        ComputerName,
+        ContextImageFileName,
+        ContextBaseFileName,
+        NewScriptFilePath,
+        NewScriptFileName,
+        NewScriptTargetFileName,
+        FileIdentifier,
+        DesiredAccess,
+        FileCategory,
+        FileAttributes,
+        FileObject,
+        ShareAccess,
+        Status
+      ],
+      limit=max
+    )

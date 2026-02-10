@@ -1,0 +1,80 @@
+name: talon_win_query_scheduledtaskregistered
+description: Base query for scheduled task events. Normalizes task registration details.
+visualization:
+  options:
+    cell-overflow: wrap-text
+    column-overflow: truncate
+    configured-columns: {}
+    row-numbers-enabled: false
+  type: table-view
+labels:
+- talon_hunt_framework
+- query
+- scheduledtaskregistered
+- windows
+$schema: https://schemas.humio.com/query/v0.6.0
+timeInterval:
+  isLive: false
+  start: 15m
+queryString: |-
+  // =====================================================
+  // SEARCH
+  // =====================================================
+  #event_simpleName=ScheduledTaskRegistered event_platform=Win
+
+  // =====================================================
+  // SEARCH ASSETS
+  // =====================================================
+  | $talon_convert_time_utc()
+  | $talon_utility_falcon_helper()
+  | $talon_win_deconflict_scheduledtaskregistered()
+  | $talon_win_format_scheduledtaskregistered()
+  | $talon_win_normalize_scheduledtaskregistered()
+
+  // =====================================================
+  // TABLE
+  // =====================================================
+  | table(
+      [
+          utc_time,
+          ComputerName,
+          TaskComputerName,
+          TaskUserName,
+          TaskAuthor,
+          TaskExecArguments,
+          TaskExecCommand,
+          TaskName,
+          Task.Principals.Principal.LogonType,
+          Task.Principals.Principal.RunLevel,
+          Task.Principals.Principal.UserId,
+          Task.Settings.Enabled,
+          Task.Settings.Hidden,
+          Task.Settings.Priority,
+          Task.Settings.RunOnlyIfNetworkAvailable,
+          Task.Triggers.BootTrigger,
+          Task.Triggers.BootTrigger.Enabled,
+          Task.Triggers.BootTrigger.Repetition.Interval,
+          Task.Triggers.CalendarTrigger.Enabled,
+          Task.Triggers.CalendarTrigger.Repetition.Interval,
+          Task.Triggers.EventTrigger.Enabled,
+          Task.Triggers.EventTrigger.Subscription,
+          Task.Triggers.IdleTrigger.Enabled,
+          Task.Triggers.LogonTrigger,
+          Task.Triggers.LogonTrigger.Enabled,
+          Task.Triggers.LogonTrigger.Repetition.Interval,
+          Task.Triggers.LogonTrigger.UserId,
+          Task.Triggers.RegistrationTrigger,
+          Task.Triggers.RegistrationTrigger.Enabled,
+          Task.Triggers.RegistrationTrigger.Repetition.Interval,
+          Task.Triggers.SessionStateChangeTrigger,
+          Task.Triggers.SessionStateChangeTrigger.Enabled,
+          Task.Triggers.SessionStateChangeTrigger.Repetition.Interval,
+          Task.Triggers.SessionStateChangeTrigger.StateChange,
+          Task.Triggers.TimeTrigger.Enabled,
+          Task.Triggers.TimeTrigger.Repetition.Interval,
+          Task.Triggers.WnfStateChangeTrigger,
+          Task.Triggers.WnfStateChangeTrigger.Enabled,
+          InterfaceGuidSource
+      ],
+      limit=max
+  )

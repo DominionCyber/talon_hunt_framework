@@ -1,0 +1,157 @@
+name: talon_win_match_classifiedmoduleload_processrollup2
+description: Joins classifiedmoduleload events with ProcessRollup2 events to enrich with parent process context.
+visualization:
+  options:
+    cell-overflow: wrap-text
+    column-overflow: truncate
+    configured-columns: {}
+    row-numbers-enabled: false
+  type: table-view
+labels:
+- talon_hunt_framework
+- match
+- classifiedmoduleload
+- processrollup2
+- syntheticprocessrollup2
+- windows
+$schema: https://schemas.humio.com/query/v0.6.0
+timeInterval:
+  isLive: false
+  start: 15m
+queryString: |-
+  // =====================================================
+  // L1 SEARCH
+  // =====================================================
+  defineTable(
+      query={
+        #event_simpleName=ClassifiedModuleLoad event_platform=Win
+        | $talon_utility_falcon_pid()
+        | $talon_win_deconflict_classifiedmoduleload()
+        | $talon_convert_file_size()
+        | $talon_win_normalize_file_path(TargetField=ClassifiedModuleFilePath)
+        | $talon_win_normalize_file_path(TargetField=ImageFileName)
+        | $talon_win_normalize_classifiedmoduleload()
+        | parseUrl(HostUrl)
+        | parseUrl(RefererUrl)
+      },
+      name=classified_modules,
+      include=[
+          falconPID,
+          ClassifiedModuleFilePath,
+          ClassifiedModuleFileName,
+          ClassifiedModuleSHA256HashData,
+          ImageFileName,
+          ImageSignatureLevel,
+          ImageSignatureType,
+          ModuleSize,
+          CommonSize,
+          ClassifiedModuleOriginalFilename,
+          ModuleCharacteristics,
+          ModuleCharacteristics_mask,
+          ModuleLoadTelemetryClassification,
+          ModuleLoadTelemetryClassification_mask,
+          MappedFromUserMode,
+          HostUrl,
+          HostUrl.host,
+          HostUrl.path,
+          HostUrl.query,
+          HostUrl.scheme,
+          RefererUrl,
+          RefererUrl.host,
+          RefererUrl.path,
+          RefererUrl.query,
+          RefererUrl.scheme,
+          SignInfoFlags,
+          SignInfoFlags_mask
+      ]
+  )
+
+  // =====================================================
+  // L2 SEARCH
+  // =====================================================
+  | #event_simpleName=/ProcessRollup2/ event_platform=Win
+
+  // =====================================================
+  // MATCH STATEMENT
+  // =====================================================
+  | match(
+      table=classified_modules,
+      field=TargetProcessId,
+      column=falconPID
+  )
+
+  // =====================================================
+  // L2 SEARCH ASSETS
+  // =====================================================
+  | $talon_convert_time_utc()
+  | $talon_utility_falcon_helper()
+  | $talon_win_format_callstackmodules()
+  | $talon_win_normalize_file_path(TargetField=FilePath)
+  | $talon_win_normalize_file_path(TargetField=CallStackModules)
+  | $talon_win_normalize_nt_authority_system_user()
+  | $talon_win_normalize_processrollup2()
+
+  // =====================================================
+  // GROUP BY LOGIC
+  // =====================================================
+  | groupBy(
+      [aid, SHA256HashData, ClassifiedModuleSHA256HashData],
+      function=[
+          collect([
+              utc_time,
+              ComputerName,
+              UserName,
+              GrandParentBaseFileName,
+              ParentBaseFileName,
+              FilePath,
+              FileName,
+              CommandLine,
+              SHA256HashData,
+              CallStackModules,
+              OriginalFilename,
+              SessionId,
+              ImageSubsystem,
+              IntegrityLevel,
+              CreateProcessType,
+              ProcessCreateFlags,
+              ProcessCreateFlags_mask,
+              ProcessParameterFlags,
+              ProcessParameterFlags_mask,
+              ProcessSxsFlags,
+              ProcessSxsFlags_mask,
+              RawProcessId,
+              ClassifiedModuleFilePath,
+              ClassifiedModuleFileName,
+              ClassifiedModuleSHA256HashData,
+              ImageFileName,
+              ImageSignatureLevel,
+              ImageSignatureType,
+              ClassifiedModuleOriginalFilename,
+              ModuleSize,
+              CommonSize,
+              ModuleCharacteristics,
+              ModuleCharacteristics_mask,
+              ModuleLoadTelemetryClassification,
+              ModuleLoadTelemetryClassification_mask,
+              MappedFromUserMode,
+              HostUrl,
+              HostUrl.host,
+              HostUrl.path,
+              HostUrl.query,
+              HostUrl.scheme,
+              RefererUrl,
+              RefererUrl.host,
+              RefererUrl.path,
+              RefererUrl.query,
+              RefererUrl.scheme,
+              SignInfoFlags,
+              SignInfoFlags_mask
+          ])
+      ],
+      limit=max
+  )
+
+  // =====================================================
+  // TABLE
+  // =====================================================
+  | table([utc_time,ComputerName,UserName,GrandParentBaseFileName,ParentBaseFileName,FilePath,FileName,CommandLine,SHA256HashData,CallStackModules,HostUrl,RefererUrl,OriginalFilename,SessionId,ImageSubsystem,IntegrityLevel,CreateProcessType,ProcessCreateFlags,ProcessCreateFlags_mask,ProcessParameterFlags,ProcessParameterFlags_mask,ProcessSxsFlags,ProcessSxsFlags_mask,RawProcessId,DomainName,RequestType,DnsRequestCount,DnsResponseType,QueryStatus,DualRequest,CNAMERecords,FirstIP4Record,FirstIP4Record.asn,FirstIP4Record.org,FirstIP4Record.country,FirstIP4Record.city,IP4Records,FirstIP6Record,IP6Records,RespondingDnsServer])

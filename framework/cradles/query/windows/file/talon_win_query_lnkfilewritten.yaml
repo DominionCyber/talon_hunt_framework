@@ -1,0 +1,55 @@
+name: talon_win_query_lnkfilewritten
+description: Base query for LNK file creation events. Normalizes path and file system metadata.
+visualization:
+  options:
+    cell-overflow: wrap-text
+    column-overflow: truncate
+    configured-columns: {}
+    row-numbers-enabled: false
+  type: table-view
+labels:
+- talon_hunt_framework
+- query
+- lnkfilewritten
+- windows
+$schema: https://schemas.humio.com/query/v0.6.0
+timeInterval:
+  isLive: false
+  start: 15m
+queryString: |-
+  // =====================================================
+  // SEARCH
+  // =====================================================
+  #event_simpleName=LnkFileWritten event_platform=Win
+
+  // =====================================================
+  // SEARCH ASSETS
+  // =====================================================
+  | $talon_convert_time_utc()
+  | $talon_utility_falcon_helper()
+  | $talon_win_normalize_lnkfilewritten()
+  | $talon_win_deconflict_lnkfilewritten()
+  | $talon_convert_file_size()
+  | $talon_win_normalize_file_path(TargetField=LnkFilePath)
+  | $talon_win_normalize_file_path(TargetField=LnkTargetFileName)
+
+  // =====================================================
+  // TABLE
+  // =====================================================
+  | table(
+      [
+        utc_time,
+        ComputerName,
+        ContextBaseFileName,
+        LnkFileName,
+        LnkFilePath,
+        LnkTargetFileName,
+        LnkFileSize,
+        CommonSize,
+        FileIdentifier,
+        FileEcpBitmask,
+        FileEcpBitmask_mask,
+        FileCategory
+      ],
+      limit=max
+    )

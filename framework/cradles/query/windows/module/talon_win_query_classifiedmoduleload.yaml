@@ -1,0 +1,73 @@
+name: talon_win_query_classifiedmoduleload
+description: Base query for module load events. Normalizes file paths, hashes, and module metadata.
+visualization:
+  options:
+    cell-overflow: wrap-text
+    column-overflow: truncate
+    configured-columns: {}
+    row-numbers-enabled: false
+  type: table-view
+labels:
+- talon_hunt_framework
+- query
+- classifiedmoduleload
+- windows
+$schema: https://schemas.humio.com/query/v0.6.0
+timeInterval:
+  isLive: false
+  start: 15m
+queryString: |-
+  // =====================================================
+  // SEARCH
+  // =====================================================
+  #event_simpleName=ClassifiedModuleLoad event_platform=Win
+
+  // =====================================================
+  // SEARCH ASSETS
+  // =====================================================
+  | $talon_convert_time_utc()
+  | $talon_utility_falcon_helper()
+  | $talon_win_deconflict_classifiedmoduleload()
+  | $talon_convert_file_size(TargetField=ModuleSize)
+  | $talon_win_normalize_file_path(TargetField=ClassifiedModuleFilePath)
+  | $talon_win_normalize_file_path(TargetField=ImageFileName)
+  | $talon_win_normalize_classifiedmoduleload()
+  | parseUrl(HostUrl)
+  | parseUrl(RefererUrl)
+
+  // =====================================================
+  // TABLE
+  // =====================================================
+  | table(
+      [
+          utc_time,
+          ComputerName,
+          ClassifiedModuleFilePath,
+          ClassifiedModuleFileName,
+          ClassifiedModuleSHA256HashData,
+          ImageFileName,
+          ImageSignatureLevel,
+          ImageSignatureType,
+          ClassifiedModuleOriginalFilename,
+          ImageHashSize,
+          CommonSize,
+          ModuleCharacteristics,
+          ModuleCharacteristics_mask,
+          ModuleLoadTelemetryClassification,
+          ModuleLoadTelemetryClassification_mask,
+          MappedFromUserMode,
+          HostUrl,
+          HostUrl.host,
+          HostUrl.path,
+          HostUrl.query,
+          HostUrl.scheme,
+          RefererUrl,
+          RefererUrl.host,
+          RefererUrl.path,
+          RefererUrl.query,
+          RefererUrl.scheme,
+          SignInfoFlags,
+          SignInfoFlags_mask
+      ],
+      limit=max
+  )

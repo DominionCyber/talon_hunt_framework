@@ -1,0 +1,57 @@
+name: talon_win_query_newexecutablewritten
+description: Base query for New Executable file creation events. Normalizes path and file system metadata.
+visualization:
+  options:
+    cell-overflow: wrap-text
+    column-overflow: truncate
+    configured-columns: {}
+    row-numbers-enabled: false
+  type: table-view
+labels:
+- talon_hunt_framework
+- query
+- newexecutablewritten
+- windows
+$schema: https://schemas.humio.com/query/v0.6.0
+timeInterval:
+  isLive: false
+  start: 15m
+queryString: |-
+  // =====================================================
+  // SEARCH
+  // =====================================================
+  #event_simpleName=NewExecutableWritten event_platform=Win
+
+  // =====================================================
+  // SEARCH ASSETS
+  // =====================================================
+  | $talon_convert_time_utc()
+  | $talon_utility_falcon_helper()
+  | $talon_win_normalize_newexecutablewritten()
+  | $talon_win_deconflict_newexecutablewritten()
+  | $talon_win_normalize_file_path(TargetField=ContextImageFileName)  
+  | $talon_win_normalize_file_path(TargetField=NewExecutableFilePath)
+
+  // =====================================================
+  // TABLE
+  // =====================================================
+  | table(
+      [
+        utc_time,
+        ComputerName,
+        ContextImageFileName,
+        ContextBaseFileName,
+        NewExecutableFilePath,
+        NewExecutableFileName,
+        FileIdentifier,
+        DesiredAccess,
+        FileAttributes,
+        FileObject,
+        ShareAccess,
+        Status,
+        FileEcpBitmask,
+        FileEcpBitmask_mask,
+        FileIdentifier
+      ],
+      limit=max
+    )
