@@ -1,0 +1,89 @@
+name: talon_win_normalize_newexecutablewritten
+description: Normalizes event fields using conditional logic to standardize values across different event sources.
+visualization:
+  options:
+    columns:
+    - fieldName: '@timestamp'
+      format: datetime
+      type: field
+      width: 200
+    - groupByPrefix: false
+      header: Field List
+      type: fieldList
+    newestAtBottom: true
+    showOnlyFirstLine: false
+  type: list-view
+labels:
+- talon_hunt_framework
+- asset
+- normalize
+- newexecutablewritten
+- windows
+$schema: https://schemas.humio.com/query/v0.6.0
+timeInterval:
+  isLive: false
+  start: 15m
+queryString: |-
+  // =====================================================
+  // NORMALIZATION
+  // =====================================================
+  | case {
+      Status = "0"          | Status := "STATUS_SUCCESS";
+      Status = "258"        | Status := "STATUS_TIMEOUT";
+      Status = "259"        | Status := "STATUS_PENDING";
+      Status = "290"        | Status := "STATUS_NOTHING_TO_TERMINATE";
+      Status = "538181633"  | Status := "STATUS_COMPONENT_ENABLED";
+      Status = "1611524114" | Status := "STATUS_DEP_DISABLED_APPCOMPAT";
+      Status = "1611597826" | Status := "STATUS_NO_EXISTING_CREDENTIALS";
+      Status = "1611790354" | Status := "STATUS_HTTP_VISIBILITY_ENABLED";
+      Status = "1611790376" | Status := "STATUS_SMTP_VISIBILITY_ENABLED";
+      Status = "1611853859" | Status := "STATUS_PREVENTION_NOT_NEEDED";
+      Status = "1611565089" | Status := "STATUS_MASK_ADJUSTED";
+      Status = "1612580900" | Status := "STATUS_ALREADY_BLOCKED";
+      Status = "1611923478" | Status := "STATUS_COMPONENT_STOPPED";
+      Status = "2147483649" | Status := "STATUS_GUARD_PAGE_VIOLATION";
+      Status = "3221225473" | Status := "STATUS_UNSUCCESSFUL";
+      Status = "3221225493" | Status := "STATUS_INVALID_PARAMETER";
+      Status = "3221225506" | Status := "STATUS_UNRECOGNIZED_MEDIA";
+      Status = "3221225508" | Status := "STATUS_ACCESS_DENIED";
+      Status = "3221225524" | Status := "STATUS_OBJECT_NAME_NOT_FOUND";
+      Status = "3221225533" | Status := "STATUS_DATA_LATE_ERROR";
+      Status = "3221225541" | Status := "STATUS_INVALID_PAGE_PROTECTION";
+      Status = "3221225653" | Status := "STATUS_PROCESS_IS_TERMINATING";
+      Status = "3221225760" | Status := "STATUS_CANCELLED";
+      Status = "3221226138" | Status := "STATUS_POLICY_OBJECT_NOT_FOUND";
+      Status = "3221225652" | Status := "STATUS_NO_PAGE_HASHES";
+      Status = "3221225620" | Status := "STATUS_RESOURCE_DATA_NOT_FOUND";
+      Status = "3221225627" | Status := "STATUS_RESOURCE_NAME_NOT_FOUND";
+      Status = "3221225876" | Status := "STATUS_INTEGER_DIVIDE_BY_ZERO";
+      Status = "3221225725" | Status := "STATUS_IO_TIMEOUT";
+      Status = "3221225659" | Status := "STATUS_NO_ACTIVE_RPC_THREAD";
+      Status = "3221226026" | Status := "STATUS_DRIVER_BLOCKED_CRITICAL";
+      Status = "3221226029" | Status := "STATUS_RETRY";
+      Status = "3221227780" | Status := "STATUS_FILE_TOO_LARGE";
+      Status = "3226515459" | Status := "STATUS_LFO_STATIC_CONFIG_DOWNLOAD_DISABLED";
+      Status = "3759013927" | Status := "STATUS_PROCESS_KILLED";
+      Status = "3759013928" | Status := "STATUS_PROCESS_CRITICAL";
+      Status = "3759013929" | Status := "STATUS_PROCESS_WHITELISTED";
+      Status = "3759013930" | Status := "STATUS_PROCESS_MICROSOFT_SIGNED";
+      Status = "3759013931" | Status := "STATUS_PROCESS_APPLE_SIGNED";
+      Status = "3758366737" | Status := "STATUS_FEATURE_DISABLED";
+      Status = "3759401022" | Status := "STATUS_COMPONENT_DISABLED";
+      Status = "3760849112" | Status := "STATUS_NON_CROWDSTRIKE";
+      Status = "3760914656" | Status := "STATUS_LFO_UPLOAD_FAILURE";
+      Status = "3760914657" | Status := "STATUS_LFO_UPLOAD_CLOUD_FAILURE";
+      Status = "3760914660" | Status := "STATUS_PROCESS_LSASS";
+      Status = "3760914661" | Status := "STATUS_PROCESS_CROWDSTRIKE";
+      *
+    }
+
+  | bitfield:extractFlagsAsString(
+      field="FileEcpBitmask",
+      flagNames=[
+        [0, "ECP_SRV_OPEN"],
+        [1, "ECP_CS_SENSOR_OPEN"],
+        [2, "ECP_CS_SENSOR_FILE_CHARACTERISTICS"]
+      ],
+      as="FileEcpBitmask_mask",
+      separator=", "
+    )

@@ -1,0 +1,33 @@
+name: talon_win_deconflict_pefilewritten
+description: Aliases fields to PeFileWritten-prefixed names for safe joins. Maps FileName, FilePath, SHA256HashData, and related attributes.
+visualization:
+  options:
+    columns:
+    - fieldName: '@timestamp'
+      format: datetime
+      type: field
+      width: 200
+    - groupByPrefix: false
+      header: Field List
+      type: fieldList
+    newestAtBottom: true
+    showOnlyFirstLine: false
+  type: list-view
+labels:
+- talon_hunt_framework
+- asset
+- deconflict
+- pefilewritten
+- windows
+$schema: https://schemas.humio.com/query/v0.6.0
+timeInterval:
+  isLive: false
+  start: 15m
+queryString: |-
+  // =====================================================
+  // DECONFLICT FIELDS
+  // =====================================================
+  | PeFileName := FileName
+  | PeFilePath := FilePath
+  | PeFileSize := Size
+  | PeTargetFileName := TargetFileName

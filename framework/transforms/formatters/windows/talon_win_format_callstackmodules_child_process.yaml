@@ -1,0 +1,61 @@
+name: talon_win_format_callstackmodules_child_process
+description: Formats CallStackModuleNames into readable semicolon-delimited list for analysis.
+visualization:
+  options:
+    columns:
+    - fieldName: '@timestamp'
+      format: datetime
+      type: field
+      width: 200
+    - groupByPrefix: false
+      header: Field List
+      type: fieldList
+    newestAtBottom: true
+    showOnlyFirstLine: false
+  type: list-view
+labels:
+- talon_hunt_framework
+- asset
+- format
+- callstackmodule
+- windows
+$schema: https://schemas.humio.com/query/v0.6.0
+timeInterval:
+  isLive: false
+  start: 15m
+queryString: |-
+  // =====================================================
+  // FORMATTING
+  // =====================================================
+  | ChildCallStackModuleNames := CallStackModuleNames
+  | replace(
+      field=ChildCallStackModuleNames,
+      regex="0\\<\\-1\\>",
+      as=ChildCallStackModuleNames
+  )
+  | replace(
+      field=ChildCallStackModuleNames,
+      regex="(\\.dll|\\.exe)\\+.*?\\|",
+      with="$1|",
+      as=ChildCallStackModuleNames
+  )
+  | loadedFile := splitString(
+      by="\\|",
+      field=ChildCallStackModuleNames
+  )
+  | array:filter(
+      array="loadedFile[]",
+      function={x=/\.(exe|dll)/i},
+      var=x
+  )
+  | concatArray(
+      field="loadedFile",
+      as=ChildCallStackModules,
+      separator="|"
+  )
+  | replace(
+      field=ChildCallStackModules,
+      regex="\\|",
+      with="\n",
+      as=ChildCallStackModules
+  )

@@ -1,0 +1,123 @@
+name: talon_win_normalize_regsystemconfigvalueupdate
+description: Normalizes event fields using conditional logic to standardize values across different event sources.
+visualization:
+  options:
+    columns:
+    - fieldName: '@timestamp'
+      format: datetime
+      type: field
+      width: 200
+    - groupByPrefix: false
+      header: Field List
+      type: fieldList
+    newestAtBottom: true
+    showOnlyFirstLine: false
+  type: list-view
+labels:
+- talon_hunt_framework
+- asset
+- normalize
+- regsystemconfigvalueupdate
+- windows
+$schema: https://schemas.humio.com/query/v0.6.0
+timeInterval:
+  isLive: false
+  start: 15m
+queryString: |-
+  // =====================================================
+  // NORMALIZATION
+  // =====================================================
+  
+  | case {
+      RegOperationType = "1"   | RegOperationType := "REG_SET_VALUE_KEY";
+      RegOperationType = "2"   | RegOperationType := "REG_DELETE_VALUE_KEY";
+      RegOperationType = "3"   | RegOperationType := "REG_CREATE_KEY";
+      RegOperationType = "4"   | RegOperationType := "REG_DELETE_KEY";
+      RegOperationType = "5"   | RegOperationType := "REG_SET_KEY_SECURITY";
+      RegOperationType = "6"   | RegOperationType := "REG_LOAD_KEY";
+      RegOperationType = "7"   | RegOperationType := "REG_RENAME_KEY";
+      RegOperationType = "8"   | RegOperationType := "REG_OPEN_KEY";
+      RegOperationType = "9"   | RegOperationType := "REG_QUERY_NAME_KEY";
+      RegOperationType = "101" | RegOperationType := "REG_SET_VALUE_KEY_ANTI_TAMPER";
+      RegOperationType = "102" | RegOperationType := "REG_DELETE_VALUE_KEY_ANTI_TAMPER";
+      *
+    }
+  
+  | case {
+      RegClassification = "0"   | RegClassification := "UNKNOWN";
+      RegClassification = "1"   | RegClassification := "SYSTEM_STARTUP_AUTORUN";
+      RegClassification = "2"   | RegClassification := "SYSTEM_SHUTDOWN_AUTORUN";
+      RegClassification = "3"   | RegClassification := "USER_LOGON_AUTORUN";
+      RegClassification = "4"   | RegClassification := "USER_LOGOFF_AUTORUN";
+      RegClassification = "5"   | RegClassification := "APP_START_AUTORUN";
+      RegClassification = "6"   | RegClassification := "APP_EXTENSION";
+      RegClassification = "7"   | RegClassification := "SERVICE";
+      RegClassification = "8"   | RegClassification := "AUTHENTICATION";
+      RegClassification = "9"   | RegClassification := "CORE_PROCESSES";
+      RegClassification = "10"  | RegClassification := "CUSTOM_PROCESSES";
+      RegClassification = "11"  | RegClassification := "CORE_SERVICES";
+      RegClassification = "12"  | RegClassification := "CORE_SERVICE_PLUGINS";
+      RegClassification = "13"  | RegClassification := "SERVER_PLUGINS";
+      RegClassification = "14"  | RegClassification := "NETWORK_SERVICE_PLUGINS";
+      RegClassification = "15"  | RegClassification := "LANG_SERVICE_PLUGINS";
+      RegClassification = "16"  | RegClassification := "MULTIMEDIA_PLUGINS";
+      RegClassification = "17"  | RegClassification := "SHELL_PLUGINS";
+      RegClassification = "18"  | RegClassification := "IE_COM_PLUGINS";
+      RegClassification = "19"  | RegClassification := "COM_REGISTRATION";
+      RegClassification = "20"  | RegClassification := "PRINTERS";
+      RegClassification = "21"  | RegClassification := "TERMINAL_SERVER";
+      RegClassification = "22"  | RegClassification := "GRAPHICS_CORE";
+      RegClassification = "23"  | RegClassification := "SYSTEM_CONFIG";
+      RegClassification = "100" | RegClassification := "ASEP_CLASS_MARGIN";
+      RegClassification = "101" | RegClassification := "CROWDSTRIKE_DATA";
+      RegClassification = "102" | RegClassification := "CROWDSTRIKE_FIREWALL_RULE";
+      RegClassification = "103" | RegClassification := "TAMPER_RELATED_OS_KEY";
+      RegClassification = "105" | RegClassification := "CROWDSTRIKE_CLASS_MARGIN";
+      RegClassification = "106" | RegClassification := "SECURITY_CONFIG";
+      RegClassification = "107" | RegClassification := "FIREWALL";
+      RegClassification = "108" | RegClassification := "BOOT_CONFIGURATION_DATA";
+      RegClassification = "109" | RegClassification := "THIRD_PARTY_AV_VENDOR";
+      RegClassification = "110" | RegClassification := "AUTHENTICATION_POLICY";
+      RegClassification = "111" | RegClassification := "BROWSER_SECURITY_POLICY";
+      RegClassification = "112" | RegClassification := "PRODAPP_CONFIG_SECURITY";
+      RegClassification = "113" | RegClassification := "KERNEL_SERVICE_CONFIG";
+      RegClassification = "114" | RegClassification := "SYSTEM_CONFIG_METADATA";
+      RegClassification = "150" | RegClassification := "SYSTEM_CONFIG_CLASS_MARGIN";
+      RegClassification = "151" | RegClassification := "GENERIC_SUSPICIOUS";
+      RegClassification = "154" | RegClassification := "GENERIC_SUSPICIOUS_CLASS_MARGIN";
+      *
+    }
+  
+  | case {
+      RegClassificationFlags = "0x0001" | RegClassificationFlags := "GLOBAL";
+      RegClassificationFlags = "0x0002" | RegClassificationFlags := "PRIVILEGED";
+      RegClassificationFlags = "0x0004" | RegClassificationFlags := "NEEDS_SOURCE_SIGNED";
+      RegClassificationFlags = "0x0008" | RegClassificationFlags := "NEEDS_TARGET_SIGNED";
+      RegClassificationFlags = "0x0010" | RegClassificationFlags := "NEEDS_SOURCE_MS_SIGNED";
+      RegClassificationFlags = "0x0020" | RegClassificationFlags := "NEEDS_TARGET_MS_SIGNED";
+      RegClassificationFlags = "0x0040" | RegClassificationFlags := "SENSOR_ONLY";
+      RegClassificationFlags = "0x0080" | RegClassificationFlags := "FIREWALL_RULE";
+      RegClassificationFlags = "0x0100" | RegClassificationFlags := "FIREWALL_RULE_V2";
+      RegClassificationFlags = "0x0200" | RegClassificationFlags := "AMSI_PROVIDER_V2";
+      RegClassificationFlags = "0x0400" | RegClassificationFlags := "ANTI_TAMPERING_V2";
+      RegClassificationFlags = "0x0800" | RegClassificationFlags := "AMSI_PROVIDER_V3";
+      RegClassificationFlags = "0x1000" | RegClassificationFlags := "MUST_CONTAIN_DC_DRIVER";
+      RegClassificationFlags = "0x4000" | RegClassificationFlags := "NEEDS_RPC_INFO_WMI";
+      *
+    }
+  
+  | case {
+      RegType = "0"  | RegType := "REG_NONE";
+      RegType = "1"  | RegType := "REG_SZ";
+      RegType = "2"  | RegType := "REG_EXPAND_SZ";
+      RegType = "3"  | RegType := "REG_BINARY";
+      RegType = "4"  | RegType := "REG_DWORD";
+      RegType = "5"  | RegType := "REG_DWORD_BIG_ENDIAN";
+      RegType = "6"  | RegType := "REG_LINK";
+      RegType = "7"  | RegType := "REG_MULTI_SZ";
+      RegType = "8"  | RegType := "REG_RESOURCE_LIST";
+      RegType = "9"  | RegType := "REG_FULL_RESOURCE_DESCRIPTOR";
+      RegType = "10" | RegType := "REG_RESOURCE_REQUIREMENTS_LIST";
+      RegType = "11" | RegType := "REG_QWORD";
+      *
+    }

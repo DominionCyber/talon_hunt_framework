@@ -1,0 +1,110 @@
+name: talon_win_normalize_asepvalueupdate
+description: Normalizes event fields using conditional logic to standardize values across different event sources.
+visualization:
+  options:
+    columns:
+    - fieldName: '@timestamp'
+      format: datetime
+      type: field
+      width: 200
+    - groupByPrefix: false
+      header: Field List
+      type: fieldList
+    newestAtBottom: true
+    showOnlyFirstLine: false
+  type: list-view
+labels:
+- talon_hunt_framework
+- asset
+- normalize
+- asepvalueupdate
+- windows
+$schema: https://schemas.humio.com/query/v0.6.0
+timeInterval:
+  isLive: false
+  start: 15m
+queryString: |-
+  // =====================================================
+  // NORMALIZATION
+  // =====================================================
+  | case {
+      AsepFlags = "0" | AsepFlags := "GLOBAL";
+      AsepFlags = "1" | AsepFlags := "PRIVILEGED";
+      AsepFlags = "2" | AsepFlags := "NEEDS_SOURCE_SIGNED";
+      AsepFlags = "3" | AsepFlags := "NEEDS_TARGET_SIGNED";
+      AsepFlags = "4" | AsepFlags := "NEEDS_SOURCE_MS_SIGNE";
+      AsepFlags = "5" | AsepFlags := "NEEDS_TARGET_MS_SIGNED";
+      AsepFlags = "6" | AsepFlags := "SUSPICIOUS";
+      *
+    }
+
+  | case {
+      RegType = "0"  | RegType := "REG_NONE";
+      RegType = "1"  | RegType := "REG_SZ";
+      RegType = "2"  | RegType := "REG_EXPAND_SZ";
+      RegType = "3"  | RegType := "REG_BINARY";
+      RegType = "4"  | RegType := "REG_DWORD";
+      RegType = "5"  | RegType := "REG_DWORD_BIG_ENDIAN";
+      RegType = "6"  | RegType := "REG_LINK";
+      RegType = "7"  | RegType := "REG_MULTI_SZ";
+      RegType = "8"  | RegType := "REG_RESOURCE_LIST";
+      RegType = "9"  | RegType := "REG_FULL_RESOURCE_DESCRIPTOR";
+      RegType = "10" | RegType := "REG_RESOURCE_REQUIREMENTS_LIST";
+      RegType = "11" | RegType := "REG_QWORD";
+      *
+    }
+
+  | case {
+      RegOperationType = "1"   | RegOperationType := "REG_SET_VALUE_KEY";
+      RegOperationType = "2"   | RegOperationType := "REG_DELETE_VALUE_KEY";
+      RegOperationType = "3"   | RegOperationType := "REG_CREATE_KEY";
+      RegOperationType = "4"   | RegOperationType := "REG_DELETE_KEY";
+      RegOperationType = "5"   | RegOperationType := "REG_SET_KEY_SECURITY";
+      RegOperationType = "6"   | RegOperationType := "REG_LOAD_KEY";
+      RegOperationType = "7"   | RegOperationType := "REG_RENAME_KEY";
+      RegOperationType = "8"   | RegOperationType := "REG_OPEN_KEY";
+      RegOperationType = "9"   | RegOperationType := "REG_QUERY_NAME_KEY";
+      RegOperationType = "101" | RegOperationType := "REG_SET_VALUE_KEY_ANTI_TAMPER";
+      RegOperationType = "102" | RegOperationType := "REG_DELETE_VALUE_KEY_ANTI_TAMPER";
+      *
+    }
+
+  | case {
+      AsepValueType = "0" | AsepValueType := "UNKNOWN";
+      AsepValueType = "1" | AsepValueType := "CMD_LINE";
+      AsepValueType = "2" | AsepValueType := "DLL_PATH";
+      AsepValueType = "3" | AsepValueType := "DLL_NAME";
+      AsepValueType = "4" | AsepValueType := "APP_NAME";
+      AsepValueType = "5" | AsepValueType := "GUID";
+      *
+    }
+
+  | case {
+      AsepClass = "0"   | AsepClass := "UNKNOWN";
+      AsepClass = "1"   | AsepClass := "SYSTEM_STARTUP_AUTORUN";
+      AsepClass = "2"   | AsepClass := "SYSTEM_SHUTDOWN_AUTORUN";
+      AsepClass = "3"   | AsepClass := "USER_LOGON_AUTORUN";
+      AsepClass = "4"   | AsepClass := "USER_LOGOFF_AUTORUN";
+      AsepClass = "5"   | AsepClass := "APP_START_AUTORUN";
+      AsepClass = "6"   | AsepClass := "APP_EXTENSION";
+      AsepClass = "7"   | AsepClass := "SERVICE";
+      AsepClass = "8"   | AsepClass := "AUTHENTICATION";
+      AsepClass = "9"   | AsepClass := "CORE_PROCESSES";
+      AsepClass = "10"  | AsepClass := "CUSTOM_PROCESSES";
+      AsepClass = "11"  | AsepClass := "CORE_SERVICES";
+      AsepClass = "12"  | AsepClass := "CORE_SERVICE_PLUGINS";
+      AsepClass = "13"  | AsepClass := "SERVER_PLUGINS";
+      AsepClass = "14"  | AsepClass := "NETWORK_SERVICE_PLUGINS";
+      AsepClass = "15"  | AsepClass := "LANG_SERVICE_PLUGINS";
+      AsepClass = "16"  | AsepClass := "MULTIMEDIA_PLUGINS";
+      AsepClass = "17"  | AsepClass := "SHELL_PLUGINS";
+      AsepClass = "18"  | AsepClass := "IE_COM_PLUGINS";
+      AsepClass = "19"  | AsepClass := "COM_REGISTRATION";
+      AsepClass = "20"  | AsepClass := "PRINTERS";
+      AsepClass = "21"  | AsepClass := "TERMINAL_SERVER";
+      AsepClass = "22"  | AsepClass := "GRAPHICS_CORE";
+      AsepClass = "23"  | AsepClass := "SYSTEM_CONFIG";
+      AsepClass = "100" | AsepClass := "BOOT_CONFIGURATION_DATA";
+      AsepClass = "101" | AsepClass := "CROWDSTRIKE_KEY";
+      *
+    }
