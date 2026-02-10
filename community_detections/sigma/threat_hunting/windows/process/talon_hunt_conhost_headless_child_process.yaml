@@ -1,5 +1,5 @@
 name: talon_hunt_conhost_headless_child_process
-description: Detects child processes spawned from conhost.exe with --headless flag. Hides window from user during execution. Used by fake browser update campaigns and BOINC abuse. Adapted from Sigma rule 00ca75ab-d5ce-43be-b86c-55ff39c6abfc. Signatured by Crowdstrike.
+description: Detects child processes spawned from conhost.exe with --headless flag. Hides window from user during execution. Used by fake browser update campaigns and BOINC abuse. Adapted from Sigma rule 00ca75ab-d5ce-43be-b86c-55ff39c6abfc. Natively detected via prevention policy.
 visualization:
   options:
   cell-overflow: wrap-text
