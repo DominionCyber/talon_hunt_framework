@@ -1,0 +1,2 @@
+name: talon_hunt_powershell_import_module
+description: Detects usage of the "Import-Module" cmdlet in order to add new Cmdlets to the current PowerShell session. Commonly used to load offensive tooling like PowerView, Mimikatz, etc. Adapted from Sigma rule 4ad74d01-f48c-42d0-b88c-b31efa4d2262.

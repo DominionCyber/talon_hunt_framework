@@ -1,0 +1,80 @@
+name: talon_hunt_diskshadow_script_mode
+description: Detects execution of "Diskshadow.exe" in script mode using the "/s" flag. Attackers often abuse "diskshadow" to execute scripts that delete shadow copies or extract NTDS.dit. Adapted from Sigma rule 0c2f8629-7129-4a8a-9897-7e0768f13ff2. Well signatured by Crowdstrike.
+visualization:
+  options:
+  cell-overflow: wrap-text
+  column-overflow: truncate
+  configured-columns: {}
+  row-numbers-enabled: false
+  type: table-view
+labels:
+- talon_hunt_framework
+- hunt
+- processrollup2
+- syntheticprocessrollup2
+- windows
+- threat_hunt
+- defense_evasion
+- execution
+- t1218
+- sigma
+- high_signal
+$schema: https://schemas.humio.com/query/v0.6.0
+timeInterval:
+  isLive: false
+  start: 15m
+queryString: |-
+  // =====================================================
+  // SEARCH
+  // =====================================================
+  #event_simpleName=/ProcessRollup2/ event_platform=Win 
+  | FileName=/diskshadow\.exe/i OR OriginalFilename=/diskshadow\.exe/i
+  // diskshadow.exe: signed Windows LOLBin for VSS management - abused for shadow copy deletion, NTDS.dit extraction, and arbitrary exec via script files
+  | CommandLine=/\s\/s+/i
+  // /s: script mode flag - reads commands from file, commonly "delete shadows all" or "exec" payloads
+
+  // =====================================================
+  // SEARCH ASSETS
+  // =====================================================
+  | $talon_convert_time_utc()
+  | $talon_utility_falcon_helper()
+  | $talon_win_format_callstackmodules()
+  | $talon_win_normalize_file_path(TargetField=FilePath)
+  | $talon_win_normalize_file_path(TargetField=CallStackModules)
+  | $talon_win_normalize_nt_authority_system_user()
+  | $talon_win_normalize_processrollup2()
+
+  // =====================================================
+  // TABLE
+  // =====================================================
+  | table(
+      [
+          utc_time,
+          ComputerName,
+          UserName,
+          GrandParentBaseFileName,
+          ParentBaseFileName,
+          FilePath,
+          FileName,
+          CommandLine,
+          SHA256HashData,
+          CallStackModules,
+          HostUrl,
+          RefererUrl,
+          OriginalFilename,
+          SessionId,
+          ImageSubsystem,
+          IntegrityLevel,
+          CreateProcessType,
+          ProcessCreateFlags,
+          ProcessCreateFlags_mask,
+          ProcessParameterFlags,
+          ProcessParameterFlags_mask,
+          ProcessSxsFlags,
+          ProcessSxsFlags_mask,
+          RawProcessId,
+          SignInfoFlags,
+          SignInfoFlags_mask
+      ],
+      limit=max
+  )

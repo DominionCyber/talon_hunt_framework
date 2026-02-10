@@ -1,0 +1,17 @@
+name: talon_hunt_powershell_new_firewall_rule
+description: Detects calls to the "New-NetFirewallRule" cmdlet from PowerShell in order to add a new firewall rule with an "Allow" action. Used by Rhysida ransomware. Adapted from Sigma rule 51483085-0cba-46a8-837e-4416496d6971.
+labels:
+- talon_hunt_framework
+- hunt
+- processrollup2
+- syntheticprocessrollup2
+- windows
+- threat_hunt
+- defense-evasion
+- t1562.004
+```
+```
+  // powershell.exe/pwsh.exe/powershell_ise.exe: Windows scripting engines - ISE is the legacy integrated editor
+  | FileName=/^(powershell|pwsh|powershell_ise)\.exe$/i OR OriginalFilename=/^(PowerShell\.EXE|pwsh\.dll)$/i
+  // New-NetFirewallRule -Action Allow: creates inbound/outbound firewall exception - Rhysida ransomware uses this to open C2 channels or enable RDP/SMB for lateral movement
+  | CommandLine=/New-NetFirewallRule\s/i AND CommandLine=/\s-Action\s/i AND CommandLine=/allow/i

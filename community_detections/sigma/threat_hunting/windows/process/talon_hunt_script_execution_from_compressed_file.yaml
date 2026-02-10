@@ -1,0 +1,82 @@
+name: talon_hunt_script_execution_from_compressed_file
+description: Detects interactive execution of scripts from inside compressed files (zip/rar). Windows automatically runs scripts using wscript/cscript when double-clicked from archive tools. Covers 7zip, WinRAR, and native Explorer extraction. Adapted from Sigma rule 95724fc1-a258-4674-97db-a30351981c5a.
+visualization:
+  options:
+  cell-overflow: wrap-text
+  column-overflow: truncate
+  configured-columns: {}
+  row-numbers-enabled: false
+  type: table-view
+labels:
+- talon_hunt_framework
+- hunt
+- processrollup2
+- syntheticprocessrollup2
+- windows
+- threat_hunt
+- execution
+- t1059
+- sigma
+- high_signal
+$schema: https://schemas.humio.com/query/v0.6.0
+timeInterval:
+  isLive: false
+  start: 15m
+queryString: |-
+  // =====================================================
+  // SEARCH
+  // =====================================================
+  #event_simpleName=/ScriptControlScanTelemetry/
+  | FileName=/(cscript|mshta|powershell|pwsh|wscript)/i
+  // Filter to scripting engine invocation
+  | CommandLine=/(\.hta|\.js|\.jse|\.ps1|\.vbe|\.vbs|\.wsf|\.wsh)/i
+  // Filter to applicable script extensions
+  | CommandLine=/(\\AppData\\local\\temp\\7z.*\\|\\AppData\\local\\temp\\rar.*\\|\\AppData\\local\\temp\\rar.*\\|\\AppData\\local\\temp\\.*(rar|zip)\\)/i
+  // Filter directories to archive tools that make temporary directories if not extracted, but double clicked directly
+
+  // =====================================================
+  // SEARCH ASSETS
+  // =====================================================
+  | $talon_convert_time_utc()
+  | $talon_utility_falcon_helper()
+  | $talon_win_format_callstackmodules()
+  | $talon_convert_file_size(TargetField=OriginalContentLength)
+  | $talon_win_normalize_file_path(TargetField=GrandparentImageFileName)
+  | $talon_win_normalize_file_path(TargetField=ParentImageFileName)
+  | $talon_win_normalize_file_path(TargetField=FilePath)
+  | $talon_win_normalize_file_path(TargetField=CallStackModules)
+  | $talon_win_normalize_scriptcontrolscantelemetry()
+
+  // =====================================================
+  // TABLE
+  // =====================================================
+  | table(
+      [
+          utc_time,
+          ComputerName,
+          UserName,
+          GrandparentImageFileName,
+          GrandparentCommandLine,
+          ParentImageFileName,
+          ParentCommandLine,
+          FilePath,
+          FileName,
+          CommandLine,
+          HostProcessType,
+          CallStackHash,
+          CallStackModules,
+          CallStackModuleNamesVersion,
+          SuspectAddress,
+          SuspectStackFlag,
+          SuspectStackFlag_mask,
+          ContentSHA256HashData,
+          OriginalContentLength,
+          CommonSize,
+          ExecutableBytes,
+          ScriptContentName,
+          ScriptContent,
+          ReflectiveDllName,
+          ScriptingLanguageId
+      ],
+      limit=max
+  )
