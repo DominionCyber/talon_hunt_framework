@@ -121,7 +121,7 @@ queryString: |-
       limit=max
   )
 
-// =====================================================
-// TABLE
-// =====================================================
-| table([utc_time,ComputerName,UserName,GrandParentBaseFileName,ParentBaseFileName,FilePath,FileName,CommandLine,SHA256HashData,CallStackModules,HostUrl,RefererUrl,OriginalFilename,SessionId,ImageSubsystem,IntegrityLevel,CreateProcessType,ProcessCreateFlags,ProcessCreateFlags_mask,ProcessParameterFlags,ProcessParameterFlags_mask,ProcessSxsFlags,ProcessSxsFlags_mask,RawProcessId,AssemblyId,AssemblyName,AssemblyFlags,ModuleCommandLine,DotnetModuleFlags,DotnetModuleId,EtwProviderType,ReflectiveDotNETModuleFileName,ReflectiveDotNETModuleFilePath,ReflectiveDotNETModuleSHA256HashData,ManagedPdbBuildPath,ModuleILPath])
+  // =====================================================
+  // TABLE
+  // =====================================================
+  | table([utc_time,ComputerName,UserName,GrandParentBaseFileName,ParentBaseFileName,FilePath,FileName,CommandLine,SHA256HashData,CallStackModules,HostUrl,RefererUrl,OriginalFilename,SessionId,ImageSubsystem,IntegrityLevel,CreateProcessType,ProcessCreateFlags,ProcessCreateFlags_mask,ProcessParameterFlags,ProcessParameterFlags_mask,ProcessSxsFlags,ProcessSxsFlags_mask,RawProcessId,AssemblyId,AssemblyName,AssemblyFlags,ModuleCommandLine,DotnetModuleFlags,DotnetModuleId,EtwProviderType,ReflectiveDotNETModuleFileName,ReflectiveDotNETModuleFilePath,ReflectiveDotNETModuleSHA256HashData,ManagedPdbBuildPath,ModuleILPath])
